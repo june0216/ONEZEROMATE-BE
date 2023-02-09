@@ -3,6 +3,7 @@ package com.jiyun.recode.domain.member.domain;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,12 +16,12 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Member {
+public class Account {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-	@Column(name = "member_id", updatable = false, length = 16)
+	@Column(name = "account_id", updatable = false, length = 16)
 	private UUID id;
 
 	@NotNull(message = "이메일은 필수입니다.")
@@ -35,13 +36,13 @@ public class Member {
 	private String encodedPassword;
 
 	@Builder
-	public Member(String email, String nickname, String encodedPassword) {
+	public Account(String email, String nickname, String encodedPassword) {
 		this.email = email;
 		this.nickname = nickname;
 		this.encodedPassword = encodedPassword;
 	}
 
-	public void updateMember(String nickname){
+	public void updateAccount(String nickname){
 		this.nickname = nickname;
 	}
 
