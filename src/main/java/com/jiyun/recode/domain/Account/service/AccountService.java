@@ -1,10 +1,10 @@
-package com.jiyun.recode.domain.member.service;
+package com.jiyun.recode.domain.Account.service;
 
 
-import com.jiyun.recode.domain.member.domain.Account;
-import com.jiyun.recode.domain.member.dto.AccountUpdateReqDto;
-import com.jiyun.recode.domain.member.dto.SignUpReqDto;
-import com.jiyun.recode.domain.member.repository.AccountRepository;
+import com.jiyun.recode.domain.Account.domain.Account;
+import com.jiyun.recode.domain.Account.dto.AccountUpdateReqDto;
+import com.jiyun.recode.domain.Account.dto.SignUpReqDto;
+import com.jiyun.recode.domain.Account.repository.AccountRepository;
 import com.jiyun.recode.global.exception.CustomException.AccountNotFoundException;
 import com.jiyun.recode.global.exception.CustomException.EmailDuplicateException;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class AccountService {
 	@Transactional //TODO:readOnly 적용
 	public Account findById(UUID id) {
 		return accountRepository.findById(id)
-				.orElseThrow(AccountNotFoundException::new);
+				.orElseThrow(() -> new AccountNotFoundException());
 	}
 
 	@Transactional//TODO:readOnly 적용
@@ -42,14 +42,14 @@ public class AccountService {
 		//String encodedPassword = encodePassword(requestDto.getPassword());
 		//Account account = accountRepository.save(requestDto.toEntity(encodedPassword));
 		Account account = accountRepository.save(requestDto.toEntity());
-		return account.getId();
+		return account.getAccountId();
 	}
 
 	@Transactional
 	public UUID update(UUID accountId, AccountUpdateReqDto requestDto){
 		Account account = findById(accountId);
 		account.updateAccount(requestDto.getNickname());
-		return account.getId();
+		return account.getAccountId();
 	}
 
 }

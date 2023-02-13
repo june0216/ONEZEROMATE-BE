@@ -1,9 +1,8 @@
-package com.jiyun.recode.domain.member.domain;
+package com.jiyun.recode.domain.Account.domain;
 
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +21,7 @@ public class Account {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(name = "account_id", updatable = false, length = 16)
-	private UUID id;
+	private UUID accountId;
 
 	@NotNull(message = "이메일은 필수입니다.")
 	@Email(message = "유효하지 않은 이메일 형식입니다.",
@@ -34,6 +33,8 @@ public class Account {
 
 	@NotNull(message = "비밀번호는 필수입니다.")
 	private String encodedPassword;
+
+
 
 	@Builder
 	public Account(String email, String nickname, String encodedPassword) {
