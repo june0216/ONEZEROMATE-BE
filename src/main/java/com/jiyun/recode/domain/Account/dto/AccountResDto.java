@@ -1,7 +1,7 @@
-package com.jiyun.recode.domain.member.dto;
+package com.jiyun.recode.domain.Account.dto;
 
 
-import com.jiyun.recode.domain.member.domain.Account;
+import com.jiyun.recode.domain.Account.domain.Account;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

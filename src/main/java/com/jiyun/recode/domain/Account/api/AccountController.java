@@ -1,11 +1,11 @@
-package com.jiyun.recode.domain.member.api;
+package com.jiyun.recode.domain.Account.api;
 
 
-import com.jiyun.recode.domain.member.domain.Account;
-import com.jiyun.recode.domain.member.dto.AccountResDto;
-import com.jiyun.recode.domain.member.dto.AccountUpdateReqDto;
-import com.jiyun.recode.domain.member.dto.SignUpReqDto;
-import com.jiyun.recode.domain.member.service.AccountService;
+import com.jiyun.recode.domain.Account.domain.Account;
+import com.jiyun.recode.domain.Account.dto.AccountResDto;
+import com.jiyun.recode.domain.Account.dto.AccountUpdateReqDto;
+import com.jiyun.recode.domain.Account.dto.SignUpReqDto;
+import com.jiyun.recode.domain.Account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,8 +32,8 @@ public class AccountController {
 	}
 
 	@PatchMapping("/update")// 이메일은 변경 불가능, 비번과 닉네임 변경만
-	public ResponseEntity<AccountResDto>  update(@RequestBody @Valid final AccountUpdateReqDto requestDto) {
-		//로그인된 사람의 정보를 가져와 id로 반환, @AuthUser
+	public ResponseEntity<AccountResDto>  update(@RequestBody @Valid final AccountUpdateReqDto requestDto, @RequestParam UUID accountId) {
+		//TODO:로그인된 사람의 정보를 가져와 id로 반환, @AuthUser
 		UUID id = accountService.update(accountId, requestDto);
 		Account findAccount = accountService.findById(id);
 		return ResponseEntity.ok()
