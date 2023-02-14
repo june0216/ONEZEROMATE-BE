@@ -1,6 +1,7 @@
 package com.jiyun.recode.global.jwt;
 
 import com.jiyun.recode.domain.Account.service.UserDetailsServcieImpl;
+import com.jiyun.recode.global.redis.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
+	private final RedisService redisService;
 
 	private final UserDetailsServcieImpl userDetailsService;
 
@@ -66,6 +68,7 @@ public class JwtProvider {
 				.setSubject(email)
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + refreshTokenValidationMs));
+		//redisService.setData("RefreshToken:" + email , refreshToken, refreshTokenValidationMs);
 
 		return Jwts.builder()
 				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
