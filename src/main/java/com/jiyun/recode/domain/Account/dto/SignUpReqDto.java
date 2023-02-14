@@ -22,10 +22,10 @@ public class SignUpReqDto {
 		this.password = password;
 	}
 
-	public Account toEntity() {
+	public Account toEntity(String encodedPassword) {
 		return Account.builder()
 				.email(this.email)
-				.encodedPassword(this.password)
+				.encodedPassword(encodedPassword)
 				.nickname(this.nickname)
 				.build();
 	}

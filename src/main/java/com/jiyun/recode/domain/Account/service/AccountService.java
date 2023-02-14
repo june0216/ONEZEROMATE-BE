@@ -9,6 +9,7 @@ import com.jiyun.recode.global.exception.CustomException.AccountNotFoundExceptio
 import com.jiyun.recode.global.exception.CustomException.EmailDuplicateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AccountService {
 	private final AccountRepository accountRepository;
-	//private final BCryptPasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoder passwordEncoder;
 
 
 	@Transactional //TODO:readOnly 적용
@@ -39,9 +40,8 @@ public class AccountService {
 		if (isExistedEmail(requestDto.getEmail())){
 			throw new EmailDuplicateException();
 		}
-		//String encodedPassword = encodePassword(requestDto.getPassword());
-		//Account account = accountRepository.save(requestDto.toEntity(encodedPassword));
-		Account account = accountRepository.save(requestDto.toEntity());
+		String encodedPassword = encodePassword(requestDto.getPassword());
+		Account account = accountRepository.save(requestDto.toEntity(encodedPassword));
 		return account.getAccountId();
 	}
 
@@ -50,6 +50,10 @@ public class AccountService {
 		Account account = findById(accountId);
 		account.updateAccount(requestDto.getNickname());
 		return account.getAccountId();
+	}
+
+	private String encodePassword(String password) {
+		return passwordEncoder.encode(password);
 	}
 
 }
