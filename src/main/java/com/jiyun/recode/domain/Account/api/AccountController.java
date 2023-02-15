@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
+import static com.jiyun.recode.global.constant.ResponseConstant.WITHDRAW_SUCCESS;
+
 @Slf4j
 @RestController
 @RequestMapping("api/v1/accounts")
@@ -38,6 +40,16 @@ public class AccountController {
 		Account findAccount = accountService.findById(id);
 		return ResponseEntity.ok()
 				.body(new AccountResDto(findAccount));
+	}
+
+	@PatchMapping("/withdraw")
+	public ResponseEntity<String> withdraw(@RequestParam UUID accountId)
+	{//TODO:로그인된 사람의 정보를 가져와 id로 반환, @AuthUser
+		UUID id = accountService.withdraw(accountId);
+		Account findAccount = accountService.findById(id);
+		return ResponseEntity.ok()
+				.body(WITHDRAW_SUCCESS);
+
 	}
 
 

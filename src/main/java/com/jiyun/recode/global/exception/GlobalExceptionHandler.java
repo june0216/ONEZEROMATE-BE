@@ -2,6 +2,8 @@ package com.jiyun.recode.global.exception;
 
 import com.jiyun.recode.global.exception.CustomException.AccountNotFoundException;
 import com.jiyun.recode.global.exception.CustomException.EmailDuplicateException;
+import com.jiyun.recode.global.exception.CustomException.InvalidTokenException;
+import com.jiyun.recode.global.exception.CustomException.RefreshTokenNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +71,17 @@ public class GlobalExceptionHandler {
 	protected final ResponseEntity<ErrorResponse> handleUserNotFoundException(AccountNotFoundException e) {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.ACCOUNT_NOT_FOUND, e.getMessage());
 	}
+
+	@ExceptionHandler(RefreshTokenNotFoundException.class)
+	protected final ResponseEntity<ErrorResponse> handleRefreshTokenNotFoundException(RefreshTokenNotFoundException e) {
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.REFRESHTOKEN_NOT_FOUND, e.getMessage());
+	}
+
+	@ExceptionHandler(RefreshTokenNotFoundException.class)
+	protected final ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException e) {
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.TOKEN_VALIDATE_FAILURE, e.getMessage());
+	}
+
 
 
 /*	@ExceptionHandler(PasswordNotMatchedException.class)
