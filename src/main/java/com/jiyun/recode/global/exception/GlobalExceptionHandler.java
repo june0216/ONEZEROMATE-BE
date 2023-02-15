@@ -115,10 +115,6 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.TOKEN_VALIDATE_FAILURE, e.getMessage());
 	}
 
-
-	@ExceptionHandler(RefreshTokenExpiredException.class)
-	protected final ResponseEntity<ErrorResponse> handleAccessTokenExpiredException(RefreshTokenExpiredException e) {
-		return ErrorResponse.toErrorResponseEntity(ErrorCode.REFRESHTOKEN_EXPIRED, e.getMessage());
-	}*/
+*/
 
 }
