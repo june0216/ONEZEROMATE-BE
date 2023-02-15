@@ -51,9 +51,18 @@ public class AccountService {
 		account.updateAccount(requestDto.getNickname());
 		return account.getAccountId();
 	}
+	@Transactional
+	public UUID withdraw(UUID accountId){
+		Account account = findById(accountId);
+		account.withdrawAccount();
+		return account.getAccountId();
+	}
 
 	private String encodePassword(String password) {
 		return passwordEncoder.encode(password);
 	}
+
+
+
 
 }
