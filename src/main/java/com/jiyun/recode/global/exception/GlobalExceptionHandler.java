@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.REFRESHTOKEN_NOT_FOUND, e.getMessage());
 	}
 
-	@ExceptionHandler(RefreshTokenNotFoundException.class)
+	@ExceptionHandler(InvalidTokenException.class)
 	protected final ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException e) {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.TOKEN_VALIDATE_FAILURE, e.getMessage());
 	}
@@ -115,10 +115,6 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.TOKEN_VALIDATE_FAILURE, e.getMessage());
 	}
 
-
-	@ExceptionHandler(RefreshTokenExpiredException.class)
-	protected final ResponseEntity<ErrorResponse> handleAccessTokenExpiredException(RefreshTokenExpiredException e) {
-		return ErrorResponse.toErrorResponseEntity(ErrorCode.REFRESHTOKEN_EXPIRED, e.getMessage());
-	}*/
+*/
 
 }
