@@ -1,6 +1,8 @@
 package com.jiyun.recode.domain.account.domain;
 
 
+import com.jiyun.recode.domain.post.domain.Post;
+import com.jiyun.recode.global.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +12,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.jiyun.recode.domain.account.domain.AccountStatus.UNREGISTERED;
@@ -17,7 +21,7 @@ import static com.jiyun.recode.domain.account.domain.AccountStatus.UNREGISTERED;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Account {
+public class Account extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -42,6 +46,9 @@ public class Account {
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status;
 
+	@OneToMany(mappedBy = "ACCOUNT_ID")
+	private List<Post> posts = new ArrayList<>();
+
 	//TODO : rule, status
 
 
@@ -61,6 +68,7 @@ public class Account {
 	public void withdrawAccount(){
 		this.status = UNREGISTERED;
 	}
+
 
 
 }
