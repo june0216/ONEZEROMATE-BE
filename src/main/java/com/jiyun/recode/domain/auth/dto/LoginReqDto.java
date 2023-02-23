@@ -1,4 +1,4 @@
-package com.jiyun.recode.domain.Auth.dto;
+package com.jiyun.recode.domain.auth.dto;
 
 
 import lombok.AccessLevel;

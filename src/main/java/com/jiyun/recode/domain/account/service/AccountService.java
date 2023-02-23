@@ -1,10 +1,10 @@
-package com.jiyun.recode.domain.Account.service;
+package com.jiyun.recode.domain.account.service;
 
 
-import com.jiyun.recode.domain.Account.domain.Account;
-import com.jiyun.recode.domain.Account.dto.AccountUpdateReqDto;
-import com.jiyun.recode.domain.Account.dto.SignUpReqDto;
-import com.jiyun.recode.domain.Account.repository.AccountRepository;
+import com.jiyun.recode.domain.account.domain.Account;
+import com.jiyun.recode.domain.account.dto.AccountUpdateReqDto;
+import com.jiyun.recode.domain.account.dto.SignUpReqDto;
+import com.jiyun.recode.domain.account.repository.AccountRepository;
 import com.jiyun.recode.global.exception.CustomException.AccountNotFoundException;
 import com.jiyun.recode.global.exception.CustomException.EmailDuplicateException;
 import lombok.RequiredArgsConstructor;

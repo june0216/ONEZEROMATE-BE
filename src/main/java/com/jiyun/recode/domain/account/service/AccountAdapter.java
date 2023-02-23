@@ -1,6 +1,6 @@
-package com.jiyun.recode.domain.Account.service;
+package com.jiyun.recode.domain.account.service;
 
-import com.jiyun.recode.domain.Account.domain.Account;
+import com.jiyun.recode.domain.account.domain.Account;
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
