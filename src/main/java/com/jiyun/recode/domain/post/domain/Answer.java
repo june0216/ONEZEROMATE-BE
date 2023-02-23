@@ -23,12 +23,12 @@ public class Answer {
 	private String content;
 
 	@ManyToOne
-	@JoinColumn(name = "POST_ID")
+	@JoinColumn(name = "post_id")
 	private Post post;
 
 
 	@OneToOne
-	@JoinColumn(name = "QUESTION_ID")
+	@JoinColumn(name = "question_id")
 	private Question question;
 
 	@Builder

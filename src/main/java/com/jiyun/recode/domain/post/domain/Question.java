@@ -23,6 +23,10 @@ public class Question {
 	@Column(nullable = false)
 	private String content;
 
+	@ManyToOne
+	@JoinColumn(name = "post_id")
+	private Post post;
+
 	@Builder
 	public Question(String content) {
 		this.content = content;

@@ -33,14 +33,16 @@ public class Post extends BaseTimeEntity {
 	private String content;
 
 
-	@OneToMany(mappedBy = "POST_ID", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private List<Question> questions = new ArrayList<>();
 
-	@OneToMany(mappedBy = "POST_ID", cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private List<Answer> answers = new ArrayList<>();
 
+
 	@ManyToOne
-	@JoinColumn(name = "ACCOUNT_ID")
+	@JoinColumn(name = "account_id")
 	private Account account;
 
 	@Builder

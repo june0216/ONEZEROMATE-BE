@@ -46,7 +46,7 @@ public class Account extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status;
 
-	@OneToMany(mappedBy = "ACCOUNT_ID")
+	@OneToMany(mappedBy = "account")
 	private List<Post> posts = new ArrayList<>();
 
 	//TODO : rule, status
