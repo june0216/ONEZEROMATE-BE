@@ -1,6 +1,6 @@
-package com.jiyun.recode.domain.Account.repository;
+package com.jiyun.recode.domain.account.repository;
 
-import com.jiyun.recode.domain.Account.domain.Account;
+import com.jiyun.recode.domain.account.domain.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

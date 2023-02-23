@@ -1,10 +1,10 @@
-package com.jiyun.recode.domain.Auth.api;
+package com.jiyun.recode.domain.auth.api;
 
-import com.jiyun.recode.domain.Auth.dto.AccessTokenRefreshReqDto;
-import com.jiyun.recode.domain.Auth.dto.LoginReqDto;
-import com.jiyun.recode.domain.Auth.dto.LoginResDto;
-import com.jiyun.recode.domain.Auth.dto.TokenResDto;
-import com.jiyun.recode.domain.Auth.service.AuthService;
+import com.jiyun.recode.domain.auth.dto.AccessTokenRefreshReqDto;
+import com.jiyun.recode.domain.auth.dto.LoginReqDto;
+import com.jiyun.recode.domain.auth.dto.LoginResDto;
+import com.jiyun.recode.domain.auth.dto.TokenResDto;
+import com.jiyun.recode.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

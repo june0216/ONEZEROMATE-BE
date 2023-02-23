@@ -1,7 +1,7 @@
-package com.jiyun.recode.domain.Account.service;
+package com.jiyun.recode.domain.account.service;
 
-import com.jiyun.recode.domain.Account.domain.Account;
-import com.jiyun.recode.domain.Account.repository.AccountRepository;
+import com.jiyun.recode.domain.account.domain.Account;
+import com.jiyun.recode.domain.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

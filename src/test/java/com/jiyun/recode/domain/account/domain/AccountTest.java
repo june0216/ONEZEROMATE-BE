@@ -1,4 +1,4 @@
-package com.jiyun.recode.domain.Account.domain;
+package com.jiyun.recode.domain.account.domain;
 
 import org.junit.jupiter.api.Test;
 

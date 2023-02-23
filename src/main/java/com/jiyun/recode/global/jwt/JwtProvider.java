@@ -1,6 +1,6 @@
 package com.jiyun.recode.global.jwt;
 
-import com.jiyun.recode.domain.Account.service.UserDetailsServcieImpl;
+import com.jiyun.recode.domain.account.service.UserDetailsServcieImpl;
 import com.jiyun.recode.global.redis.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

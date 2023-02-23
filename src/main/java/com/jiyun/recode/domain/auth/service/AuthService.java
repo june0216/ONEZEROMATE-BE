@@ -1,11 +1,11 @@
-package com.jiyun.recode.domain.Auth.service;
+package com.jiyun.recode.domain.auth.service;
 
-import com.jiyun.recode.domain.Account.domain.Account;
-import com.jiyun.recode.domain.Account.repository.AccountRepository;
-import com.jiyun.recode.domain.Auth.dto.AccessTokenRefreshReqDto;
-import com.jiyun.recode.domain.Auth.dto.LoginReqDto;
-import com.jiyun.recode.domain.Auth.dto.LoginResDto;
-import com.jiyun.recode.domain.Auth.dto.TokenResDto;
+import com.jiyun.recode.domain.account.domain.Account;
+import com.jiyun.recode.domain.account.repository.AccountRepository;
+import com.jiyun.recode.domain.auth.dto.AccessTokenRefreshReqDto;
+import com.jiyun.recode.domain.auth.dto.LoginReqDto;
+import com.jiyun.recode.domain.auth.dto.LoginResDto;
+import com.jiyun.recode.domain.auth.dto.TokenResDto;
 import com.jiyun.recode.global.exception.CustomException.AccountNotFoundException;
 import com.jiyun.recode.global.exception.CustomException.InvalidTokenException;
 import com.jiyun.recode.global.exception.CustomException.RefreshTokenNotFoundException;

@@ -1,4 +1,4 @@
-package com.jiyun.recode.domain.Account.domain;
+package com.jiyun.recode.domain.account.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

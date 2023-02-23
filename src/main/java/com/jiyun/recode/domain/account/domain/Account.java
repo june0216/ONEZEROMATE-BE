@@ -1,4 +1,4 @@
-package com.jiyun.recode.domain.Account.domain;
+package com.jiyun.recode.domain.account.domain;
 
 
 import lombok.AccessLevel;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
-import static com.jiyun.recode.domain.Account.domain.AccountStatus.UNREGISTERED;
+import static com.jiyun.recode.domain.account.domain.AccountStatus.UNREGISTERED;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
