@@ -1,7 +1,6 @@
 package com.jiyun.recode.domain.account.domain;
 
 
-import com.jiyun.recode.domain.post.domain.Post;
 import com.jiyun.recode.global.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,8 +11,6 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static com.jiyun.recode.domain.account.domain.AccountStatus.UNREGISTERED;
@@ -46,8 +43,8 @@ public class Account extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status;
 
-	@OneToMany(mappedBy = "account")
-	private List<Post> posts = new ArrayList<>();
+/*	@OneToMany(mappedBy = "account") //왜? 매핑 오류
+	private List<Post> posts = new ArrayList<>();*/
 
 	//TODO : rule, status
 

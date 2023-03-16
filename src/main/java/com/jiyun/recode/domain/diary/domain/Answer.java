@@ -1,4 +1,4 @@
-package com.jiyun.recode.domain.post.domain;
+package com.jiyun.recode.domain.diary.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,13 +17,13 @@ public class Answer {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(name = "answer_id", updatable = false, length = 16)
-	private UUID fromId;
+	private UUID answerId;
 
 	@Column
 	private String content;
 
-	@ManyToOne
-	@JoinColumn(name = "post_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "post_id", updatable = false)
 	private Post post;
 
 

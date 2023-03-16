@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Slf4j
@@ -24,18 +24,17 @@ public class AccountService {
 	private final BCryptPasswordEncoder passwordEncoder;
 
 
-	@Transactional //TODO:readOnly 적용
+	@Transactional(readOnly = true)
 	public Account findById(UUID id) {
 		return accountRepository.findById(id)
 				.orElseThrow(() -> new AccountNotFoundException());
 	}
 
-	@Transactional//TODO:readOnly 적용
+	@Transactional(readOnly = true)
 	public boolean isExistedEmail(String email){
 		return accountRepository.existsByEmail(email);
 	}
 
-	@Transactional
 	public UUID signUp(SignUpReqDto requestDto){
 		if (isExistedEmail(requestDto.getEmail())){
 			throw new EmailDuplicateException();
@@ -45,13 +44,11 @@ public class AccountService {
 		return account.getAccountId();
 	}
 
-	@Transactional
 	public UUID update(UUID accountId, AccountUpdateReqDto requestDto){
 		Account account = findById(accountId);
 		account.updateAccount(requestDto.getNickname());
 		return account.getAccountId();
 	}
-	@Transactional
 	public UUID withdraw(UUID accountId){
 		Account account = findById(accountId);
 		account.withdrawAccount();

@@ -1,6 +1,7 @@
-package com.jiyun.recode.domain.post.domain;
+package com.jiyun.recode.domain.diary.domain;
 
 import com.jiyun.recode.domain.account.domain.Account;
+import com.jiyun.recode.domain.diary.dto.PostReqDto;
 import com.jiyun.recode.global.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,32 +33,54 @@ public class Post extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String content;
 
-
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-	private List<Question> questions = new ArrayList<>();
+	private String emtionEmoji;
 
 
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "post")
 	private List<Answer> answers = new ArrayList<>();
 
 
 	@ManyToOne
 	@JoinColumn(name = "account_id")
-	private Account account;
+	private Account writer;
 
 	@Builder
-	public Post(LocalDate date, String content, List<Question> questions, List<Answer> answers, Account account) {
+	public Post(LocalDate date, String content,Account writer) {
 		this.date = date;
 		this.content = content;
-		this.questions = questions;
-		this.answers = answers;
-		this.account = account;
+		//this.questions = questions;
+		//this.answers = answers;
+		this.writer = writer;
 	}
 
 
 	public void updateDate(LocalDate date)
 	{
 		this.date = date;
+	}
+
+	public void emojiResult(String emtionEmoji)
+	{
+		this.emtionEmoji = emtionEmoji;
+	}
+
+	//편의메서드
+	public void addAnswer(Answer answer) {
+		answers.add(answer);
+		//answer.setPost(this);
+	}
+
+	public void updatePost(PostReqDto.Update requestDto)
+	{
+		date = requestDto.getDate();
+		content = requestDto.getContent();
+		for(String questions : requestDto.getAnswerList())
+		{
+
+		}
+
+
 	}
 
 

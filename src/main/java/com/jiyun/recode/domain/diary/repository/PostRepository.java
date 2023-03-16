@@ -1,6 +1,6 @@
-package com.jiyun.recode.domain.post.repository;
+package com.jiyun.recode.domain.diary.repository;
 
-import com.jiyun.recode.domain.post.domain.Post;
+import com.jiyun.recode.domain.diary.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
