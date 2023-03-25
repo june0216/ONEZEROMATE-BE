@@ -44,6 +44,7 @@ public class SecurityConfiguration {
 
 				.and()
 				.authorizeRequests() // URL 별로 리소스에 대한 접근 권한 관리
+				.antMatchers("/*").permitAll() // 모든 접근 가능
 				.anyRequest().permitAll()// 우선 다 허용
 				.and()
 				.cors().configurationSource(corsConfigurationSource()) // CorsConfigurationSource 를 cors 정책의 설정파일 등록

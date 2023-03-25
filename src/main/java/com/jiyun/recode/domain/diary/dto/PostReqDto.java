@@ -1,9 +1,7 @@
 package com.jiyun.recode.domain.diary.dto;
 
 import com.jiyun.recode.domain.account.domain.Account;
-import com.jiyun.recode.domain.diary.domain.Answer;
 import com.jiyun.recode.domain.diary.domain.Post;
-import com.jiyun.recode.domain.diary.domain.Question;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -28,13 +26,13 @@ public class PostReqDto {
 					.build();
 		}
 
-		public Answer toEntity(Post post, Question question)
+/*		public Answer toEntity(Post post, Question question)
 		{
 			return Answer.builder()
 					.question(question)
 					.post(post)
 					.build();
-		}
+		}*/
 
 	}
 
@@ -43,9 +41,13 @@ public class PostReqDto {
 	public static class Update {
 
 		private String content;
-		private List<String> questionList;
-		private List<String> answerList;
-		//private Map<String, String> questionAnswerMap;
+		private List<QnaReqDto> qnaList;
+/*		private List<Long> questionList;
+		private List<UUID> answerIdList;
+		private List<String> answerList;*/
 		private LocalDate date;
+
+
+
 	}
 }

@@ -1,7 +1,6 @@
 package com.jiyun.recode.domain.diary.domain;
 
 import com.jiyun.recode.domain.account.domain.Account;
-import com.jiyun.recode.domain.diary.dto.PostReqDto;
 import com.jiyun.recode.global.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,7 +29,7 @@ public class Post extends BaseTimeEntity {
 	@Column(length = 10)
 	private LocalDate date;
 
-	@Column(nullable = false)
+	@Column
 	private String content;
 
 	private String emtionEmoji;
@@ -64,6 +63,10 @@ public class Post extends BaseTimeEntity {
 	{
 		this.emtionEmoji = emtionEmoji;
 	}
+	public void updateContent(String content)
+	{
+		this.content = content;
+	}
 
 	//편의메서드
 	public void addAnswer(Answer answer) {
@@ -71,17 +74,16 @@ public class Post extends BaseTimeEntity {
 		//answer.setPost(this);
 	}
 
-	public void updatePost(PostReqDto.Update requestDto)
+/*
+	public void updatePost(PostReqDto.Update requestDto, List<Question> questionList, List<Answer> answerList)
 	{
 		date = requestDto.getDate();
 		content = requestDto.getContent();
-		for(String questions : requestDto.getAnswerList())
-		{
-
-		}
+		questionList
 
 
 	}
+*/
 
 
 

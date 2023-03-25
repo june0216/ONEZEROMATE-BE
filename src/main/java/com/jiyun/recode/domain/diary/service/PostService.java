@@ -5,6 +5,8 @@ import com.jiyun.recode.domain.diary.domain.Answer;
 import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.domain.Question;
 import com.jiyun.recode.domain.diary.dto.PostReqDto;
+import com.jiyun.recode.domain.diary.dto.QnaReqDto;
+import com.jiyun.recode.domain.diary.repository.AnswerRepository;
 import com.jiyun.recode.domain.diary.repository.PostRepository;
 import com.jiyun.recode.domain.diary.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.UUID;
 public class PostService {
 	private final PostRepository postRepository;
 	private final QuestionRepository questionRepository;
+	private final AnswerRepository answerRepository;
 
 	public List<Question> findAllRandomList(){
 		return questionRepository.findAllRandomList();
@@ -32,11 +35,11 @@ public class PostService {
 		List<Question> questionList = findAllRandomList();
 		Post post = postRepository.save(requestDto.toEntity(writer));
 
-		for(Question question : questionList)
+/*		for(Question question : questionList)
 		{
 			Answer answer = requestDto.toEntity(post,question);
 			post.addAnswer(answer);
-		}
+		}*/
 
 		return post.getPostId();
 	}
@@ -45,9 +48,22 @@ public class PostService {
 	public UUID update(UUID postId, PostReqDto.Update requestDto)
 	{
 		Post post = findById(postId);
-		//List<String> answers = new ArrayList<>(requestDto.getQuestionAnswerMap().values());
-		//List<Question> questionList = questionRepository.findAllById(requestDto.getQuestionsList());
-		//post.update(requestDto);
+		for(QnaReqDto q : requestDto.getQnaList()){ // 맵으로 해야 할듯 -> 1개만 작성하는 경우도 있어서
+			Question question = findByQuestionId(q.getQuestion_id());
+			Answer answer = q.toEntity(post,question);
+			answerRepository.save(answer);
+			post.addAnswer(answer);
+
+		}
+		/*List<Question> questionList = new ArrayList<>();
+		for(long id : requestDto.getQuestionList()){
+			questionList.add(findById(id));
+		}
+		post.addAnswer();
+		post.update(requestDto, questionList, answerList);*/
+
+		post.updateContent(requestDto.getContent());
+		postRepository.save(post);
 		return post.getPostId();
 	}
 	@Transactional(readOnly = true)
@@ -64,6 +80,13 @@ public class PostService {
 		else{
 			throw new IllegalArgumentException(); // TODO: 예외처리
 		}
+	}
+
+	@Transactional(readOnly = true)
+	public Question findByQuestionId(Long questionId)
+	{
+		return questionRepository.findById(questionId)
+				.orElseThrow(() -> new IllegalArgumentException()); //TODO: 에외처리
 	}
 
 
