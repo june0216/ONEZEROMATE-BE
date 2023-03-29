@@ -74,16 +74,8 @@ public class Post extends BaseTimeEntity {
 		//answer.setPost(this);
 	}
 
-/*
-	public void updatePost(PostReqDto.Update requestDto, List<Question> questionList, List<Answer> answerList)
-	{
-		date = requestDto.getDate();
-		content = requestDto.getContent();
-		questionList
 
 
-	}
-*/
 
 
 
