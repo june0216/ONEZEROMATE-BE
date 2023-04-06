@@ -1,0 +1,21 @@
+version: '3'
+services:
+
+  web:
+    container_name: web
+    build: .
+    command: java -jar -Dspring.profiles.active=prod app.jar
+    env_file:
+      - .env
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - web

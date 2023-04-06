@@ -66,6 +66,11 @@ public class PostService {
 		postRepository.save(post);
 		return post.getPostId();
 	}
+
+	public void uploadEmotion(UUID postId, String emotion){
+		Post post = findById(postId);
+		post.emojiResult(emotion);
+	}
 	@Transactional(readOnly = true)
 	public Post findById(UUID postId){
 		return postRepository.findById(postId)
