@@ -63,21 +63,6 @@ jobs:
       run: |
         aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
     
-    # AWS EC2 Server Connect & Docker 명령어 실행 (8)
-    - name: AWS EC2 Connection
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ubuntu
-        password: ${{ secrets.EC2_PASSWORD }} 
-        port: ${{ secrets.EC2_SSH_PORT }}
-        timeout: 60s
-        script: |
-          sudo docker stop boot-prac-ci
-          sudo docker rm boot-prac-ci
-          sudo docker run -it -d -p 8080:8080 --name boot-prac-ci lucaskang134/boot-prac-ci
-    
-
   
     - name: create remote directory
       uses: appleboy/ssh-action@master
