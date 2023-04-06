@@ -45,43 +45,24 @@ jobs:
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker build -t ${{ secrets.DOCKER_REPO }}/onezeromate-web .
         docker push ${{ secrets.DOCKER_REPO }}/onezeromate-web
-    
-        # GET GitHub IP (5)
-    - name: get GitHub IP 
-      id: ip
-      uses: haythem/public-ip@v1.2
-      
-    # Configure AWS Credentials (6) - AWS 접근 권한 취득(IAM)
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with: 
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-2
-    
-    # Add github ip to AWS (7)
-    - name: Add GitHub IP to AWS
-      run: |
-        aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
-    
-    # AWS EC2 Server Connect & Docker 명령어 실행 (8)
-    - name: AWS EC2 Connection
-      uses: appleboy/ssh-action@v0.1.6
+  
+    - name: create remote directory
+      uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.EC2_HOST }}
+        host: ${{ secrets.HOST }}
         username: ubuntu
-        password: ${{ secrets.EC2_PASSWORD }} 
-        port: ${{ secrets.EC2_SSH_PORT }}
-        timeout: 60s
-        script: |
-          sudo docker stop boot-prac-ci
-          sudo docker rm boot-prac-ci
-          sudo docker run -it -d -p 8080:8080 --name boot-prac-ci lucaskang134/boot-prac-ci
-    
-    # REMOVE Github IP FROM security group (9)
-    - name: Remove IP FROM security group
-      run: |
-        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        key: ${{ secrets.KEY }}
+        script: mkdir -p /home/ubuntu/srv/ubuntu
+
+    - name: copy source via ssh key
+      uses: burnett01/rsync-deployments@4.1
+      with:
+        switches: -avzr --delete
+        remote_path: /home/ubuntu/srv/ubuntu
+        remote_host: ${{ secrets.HOST }}
+        remote_user: ubuntu
+        remote_key: ${{ secrets.KEY }}
+  
     ## docker compose up
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
