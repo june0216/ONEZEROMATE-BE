@@ -77,10 +77,7 @@ jobs:
           sudo docker rm boot-prac-ci
           sudo docker run -it -d -p 8080:8080 --name boot-prac-ci lucaskang134/boot-prac-ci
     
-    # REMOVE Github IP FROM security group (9)
-    - name: Remove IP FROM security group
-      run: |
-        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
   
     - name: create remote directory
       uses: appleboy/ssh-action@master
@@ -112,3 +109,7 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_REPO }}/onezeromate
           docker-compose up -d
           docker image prune -f
+        # REMOVE Github IP FROM security group (9)
+    - name: Remove IP FROM security group
+      run: |
+        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
