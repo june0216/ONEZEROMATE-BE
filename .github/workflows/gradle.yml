@@ -51,8 +51,8 @@ jobs:
         REDIS_VERSION: 6.2.5
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       run: |
-          docker build -t $DOCKER_USERNAME/redis:${REDIS_VERSION} --build-arg REDIS_VERSION=${REDIS_VERSION} .
-          docker push $DOCKER_USERNAME/redis:${REDIS_VERSION}
+        docker build -t kwonjiyun/redis --build-arg REDIS_VERSION=${REDIS_VERSION} .
+        docker push kwonjiyun/redis:${REDIS_VERSION}
 
         # GET GitHub IP (5)
     - name: get GitHub IP 
