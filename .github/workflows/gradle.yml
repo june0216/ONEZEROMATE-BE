@@ -51,8 +51,8 @@ jobs:
         REDIS_VERSION: 6.2.5
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       run: |
-        docker build -t kwonjiyun/redis .
-        docker push kwonjiyun/redis
+        docker build -t kwonjiyun/redis:${{ env.REDIS_VERSION }} .
+        docker push kwonjiyun/redis:${{ env.REDIS_VERSION }}
 
         # GET GitHub IP (5)
     - name: get GitHub IP 
