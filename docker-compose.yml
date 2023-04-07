@@ -3,19 +3,16 @@ services:
 
   web:
     container_name: web
-    build:
-      context: .
-      dockerfile: /home/ubuntu/srv/ubuntu/Dockerfile
-    command: java -jar -Dspring.profiles.active=prod app.jar
+    image: kwonjiyun/onezeromate-web
     expose:
       - 8080
     ports:
-      - "8080:8080"
+      - 8080:8080
 
   nginx:
     container_name: nginx
-    build: ./nginx
+    image: kwonjiyun/onezeromate
     ports:
-      - "80:80"
+      - 80:80
     depends_on:
       - web
