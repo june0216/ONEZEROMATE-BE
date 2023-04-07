@@ -5,7 +5,7 @@ services:
     container_name: web
     build:
       context: .
-      dockerfile: /srv/ubuntu/Dockerfile
+      dockerfile: /home/ubuntu/srv/ubuntu/Dockerfile
     command: java -jar -Dspring.profiles.active=prod app.jar
     expose:
       - 8080
