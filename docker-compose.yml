@@ -8,9 +8,16 @@ services:
       - 8080
     ports:
       - 8080:8080
-
   redis:
     image: kwonjiyun/redis
+    command: redis-server --requirepass changeme --port 6379
+    container_name: ubuntu-redis-1
+    hostname: ubuntu-redis-1
+    labels:
+      - "name=ubuntu-redis-1"
+      - "mode=standalone"
+    ports:
+      - 6379:6379
 
   nginx:
     container_name: nginx
