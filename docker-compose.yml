@@ -10,7 +10,7 @@ services:
       - 8080:8080
   redis:
     image: kwonjiyun/redis
-    command: redis-server --requirepass changeme --port 6379
+    command: ["redis-server", "--bind", "ubuntu-redis-1", "--port", "6379"]
     container_name: ubuntu-redis-1
     hostname: ubuntu-redis-1
     labels:
