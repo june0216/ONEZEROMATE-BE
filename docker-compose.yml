@@ -17,7 +17,7 @@ services:
       - "name=ubuntu-redis-1"
       - "mode=standalone"
     ports:
-      - 6379:6379
+      - 6380:6379
 
   nginx:
     container_name: nginx
