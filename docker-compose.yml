@@ -3,7 +3,9 @@ services:
 
   web:
     container_name: web
-    build: .
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     command: java -jar -Dspring.profiles.active=prod app.jar
     expose:
       - 8080
