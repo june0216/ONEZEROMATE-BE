@@ -8,9 +8,9 @@ services:
       - 8080
     ports:
       - 8080:8080
+
   redis:
     image: kwonjiyun/redis
-    command: ["redis-server", "--bind", "ubuntu-redis-1", "--port", "6379"]
     container_name: ubuntu-redis-1
     hostname: ubuntu-redis-1
     labels:
@@ -18,6 +18,9 @@ services:
       - "mode=standalone"
     ports:
       - 6379:6379
+    volumes:
+      - /config/redis.conf:/tmp/redis.conf
+    command: [ "redis-server", "/tmp/redis.conf" ]
 
   nginx:
     container_name: nginx
