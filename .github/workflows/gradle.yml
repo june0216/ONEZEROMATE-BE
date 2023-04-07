@@ -45,6 +45,15 @@ jobs:
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker build -t ${{ secrets.DOCKER_REPO }}/onezeromate-web .
         docker push ${{ secrets.DOCKER_REPO }}/onezeromate-web
+    
+    - name: Build and push Redis image
+      env:
+        REDIS_VERSION: 6.2.5
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      run: |
+          docker build -t $DOCKER_USERNAME/redis:${REDIS_VERSION} --build-arg REDIS_VERSION=${REDIS_VERSION} .
+          docker push $DOCKER_USERNAME/redis:${REDIS_VERSION}
+
         # GET GitHub IP (5)
     - name: get GitHub IP 
       id: ip
