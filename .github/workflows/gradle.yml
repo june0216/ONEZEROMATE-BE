@@ -28,10 +28,10 @@ jobs:
         cd ./src/main/resources
 
         # application-database.yaml 파일 생성
-        touch ./application-database.yaml
+        touch ./application.yml
 
         # GitHub-Actions 에서 설정한 값을 application-database.yaml 파일에 쓰기
-        echo "${{ secrets.DATABASE }}" >> ./application-database.yaml
+        echo "${{ secrets.DATABASE }}" >> ./application.yml
       shell: bash
 
     ## gradle build
