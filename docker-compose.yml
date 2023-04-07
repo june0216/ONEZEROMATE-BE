@@ -11,16 +11,16 @@ services:
 
   redis:
     image: kwonjiyun/redis
-    container_name: ubuntu-redis-1
-    hostname: ubuntu-redis-1
-    labels:
-      - "name=ubuntu-redis-1"
-      - "mode=standalone"
+    #container_name: ubuntu-redis-1
+    #hostname: ubuntu-redis-1
+    #labels:
+     # - "name=ubuntu-redis-1"
+      #- "mode=standalone"
     ports:
       - 6379:6379
-    volumes:
-      - /config/redis.conf:/tmp/redis.conf
-    command: [ "redis-server", "/tmp/redis.conf" ]
+    #volumes:
+     # - /config/redis.conf:/tmp/redis.conf
+    #command: [ "redis-server", "/tmp/redis.conf" ]
 
   nginx:
     container_name: nginx
