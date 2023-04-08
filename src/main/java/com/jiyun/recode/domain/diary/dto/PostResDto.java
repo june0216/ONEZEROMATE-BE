@@ -2,7 +2,6 @@ package com.jiyun.recode.domain.diary.dto;
 
 import com.jiyun.recode.domain.diary.domain.Post;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +16,6 @@ public class PostResDto {
 	private QnaListResDto qnaList;
 	private LocalDate date;//TODO: date를 path에 넣을지 고민,,
 
-	@Builder
 	public PostResDto(Post post) {
 		this.date = post.getDate();
 		this.content = post.getContent();

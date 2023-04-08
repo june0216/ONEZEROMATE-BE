@@ -34,12 +34,14 @@ public class PostService {
 	{
 		List<Question> questionList = findAllRandomList();
 		Post post = postRepository.save(requestDto.toEntity(writer));
-
-/*		for(Question question : questionList)
+		for(Question question : questionList)
 		{
-			Answer answer = requestDto.toEntity(post,question);
+			Answer answer = Answer.builder()
+					.question(question)
+					.post(post)
+					.build();
 			post.addAnswer(answer);
-		}*/
+		}
 
 		return post.getPostId();
 	}
@@ -48,28 +50,36 @@ public class PostService {
 	public UUID update(UUID postId, PostReqDto.Update requestDto)
 	{
 		Post post = findById(postId);
-		for(QnaReqDto q : requestDto.getQnaList()){ // 맵으로 해야 할듯 -> 1개만 작성하는 경우도 있어서
-			Question question = findByQuestionId(q.getQuestion_id());
-			Answer answer = q.toEntity(post,question);
-			answerRepository.save(answer);
-			post.addAnswer(answer);
-
-		}
-		/*List<Question> questionList = new ArrayList<>();
-		for(long id : requestDto.getQuestionList()){
-			questionList.add(findById(id));
-		}
-		post.addAnswer();
-		post.update(requestDto, questionList, answerList);*/
-
+		updateAnswer(post, requestDto);
 		post.updateContent(requestDto.getContent());
 		postRepository.save(post);
 		return post.getPostId();
 	}
 
+	private void updateAnswer(Post post, PostReqDto.Update requestDto){
+		for(QnaReqDto q : requestDto.getQnaList()){ // 이중 for문 개선 필요
+			for(Answer answer : post.getAnswers()){
+				if(answer.getQuestion().getQuestionId() == q.getQuestion_id()){
+					answer.updateAnswer(q.getAnswerContent());
+					answerRepository.save(answer);
+					post.addAnswer(answer);
+				}
+			}
+		}
+	}
+
 	public void uploadEmotion(UUID postId, String emotion){
 		Post post = findById(postId);
 		post.emojiResult(emotion);
+	}
+
+	public String collectContent(UUID postId){
+		Post post = findById(postId);
+		String result = post.getContent();
+		for(Answer answer : post.getAnswers()){
+			result += answer.getContent() + " ";
+		}
+		return result;
 	}
 	@Transactional(readOnly = true)
 	public Post findById(UUID postId){

@@ -1,8 +1,5 @@
 package com.jiyun.recode.domain.diary.dto;
 
-import com.jiyun.recode.domain.diary.domain.Answer;
-import com.jiyun.recode.domain.diary.domain.Post;
-import com.jiyun.recode.domain.diary.domain.Question;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,12 +17,4 @@ public class QnaReqDto {
 		this.answerContent = answerContent;
 	}
 
-	public Answer toEntity(Post post, Question question)
-	{
-		return Answer.builder()
-				.question(question)
-				.content(answerContent)
-				.post(post)
-				.build();
-	}
 }

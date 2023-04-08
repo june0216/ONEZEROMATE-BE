@@ -35,7 +35,6 @@ public class Post extends BaseTimeEntity {
 	private String emtionEmoji;
 
 
-
 	@OneToMany(mappedBy = "post")
 	private List<Answer> answers = new ArrayList<>();
 
@@ -48,8 +47,6 @@ public class Post extends BaseTimeEntity {
 	public Post(LocalDate date, String content,Account writer) {
 		this.date = date;
 		this.content = content;
-		//this.questions = questions;
-		//this.answers = answers;
 		this.writer = writer;
 	}
 

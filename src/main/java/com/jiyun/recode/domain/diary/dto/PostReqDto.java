@@ -7,8 +7,6 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 public class PostReqDto {
 
 
@@ -46,8 +44,6 @@ public class PostReqDto {
 		private List<UUID> answerIdList;
 		private List<String> answerList;*/
 		private LocalDate date;
-
-
 
 	}
 }

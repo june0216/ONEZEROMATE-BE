@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EmotionReqDto {
+public class AnalysisReqDto {
 	private String content;
 
-	public EmotionReqDto(String content) {
+	public AnalysisReqDto(String content) {
 		this.content = content;
 	}
 }

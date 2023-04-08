@@ -7,8 +7,9 @@ import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.dto.PostReqDto;
 import com.jiyun.recode.domain.diary.dto.PostResDto;
 import com.jiyun.recode.domain.diary.service.PostService;
-import com.jiyun.recode.domain.result.dto.EmotionReqDto;
+import com.jiyun.recode.domain.result.dto.AnalysisReqDto;
 import com.jiyun.recode.domain.result.dto.EmotionResDto;
+import com.jiyun.recode.domain.result.dto.KeywordResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -19,6 +20,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.validation.Valid;
 import java.nio.charset.Charset;
 import java.util.UUID;
+
+import static com.jiyun.recode.global.constant.ResourceConstant.*;
 
 @Slf4j
 @RestController
@@ -64,25 +67,46 @@ public class PostController {
 				.body("게시물이 삭제되었습니다.");
 	}
 
-	@PostMapping("/emotion")
+	@GetMapping ("/emotion")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
-	public ResponseEntity<EmotionResDto> getDiaryEmotion(@PathVariable final UUID postId, @RequestBody final EmotionReqDto request , @AuthUser Account account) throws Exception{
-		String url = "http://127.0.0.1:5000/api";
-		String jsonInString = "";
-		RestTemplate restTemplate = new RestTemplate();
-
+	public ResponseEntity<EmotionResDto> getDiaryEmotion(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
+		String content = postService.collectContent(postId);
+		AnalysisReqDto request = new AnalysisReqDto(content);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 		HttpEntity entity = new HttpEntity(request, headers);
 
-
-		ResponseEntity<EmotionResDto> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, EmotionResDto.class);
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<EmotionResDto> responseEntity = restTemplate.exchange(host+emotionPort, HttpMethod.POST, entity, EmotionResDto.class);
 
 		log.info(String.valueOf(responseEntity.getBody()));
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		jsonInString = mapper.writeValueAsString(responseEntity.getBody());
+		String jsonInString = mapper.writeValueAsString(responseEntity.getBody());
+		postService.uploadEmotion(postId, jsonInString);
+
+		return responseEntity;
+
+	}
+
+	@GetMapping ("/keywords")
+	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
+	public ResponseEntity<KeywordResDto> getDiaryKeywords(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
+		String content = postService.collectContent(postId);
+		AnalysisReqDto request = new AnalysisReqDto(content);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+		HttpEntity entity = new HttpEntity(request, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<KeywordResDto> responseEntity = restTemplate.exchange(host+keywordPort, HttpMethod.POST, entity, KeywordResDto.class);
+
+		log.info(String.valueOf(responseEntity.getBody()));
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		String jsonInString = mapper.writeValueAsString(responseEntity.getBody());
 		postService.uploadEmotion(postId, jsonInString);
 
 		return responseEntity;
