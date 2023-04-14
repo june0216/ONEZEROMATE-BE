@@ -35,6 +35,8 @@ public class Post extends BaseTimeEntity {
 	private String emtionEmoji;
 
 
+
+
 	@OneToMany(mappedBy = "post")
 	private List<Answer> answers = new ArrayList<>();
 
@@ -68,6 +70,7 @@ public class Post extends BaseTimeEntity {
 	//편의메서드
 	public void addAnswer(Answer answer) {
 		answers.add(answer);
+
 		//answer.setPost(this);
 	}
 

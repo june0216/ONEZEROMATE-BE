@@ -68,13 +68,9 @@ public class PostService {
 		}
 	}
 
-	public void uploadEmotion(UUID postId, String emotion){
-		Post post = findById(postId);
-		post.emojiResult(emotion);
-	}
 
-	public String collectContent(UUID postId){
-		Post post = findById(postId);
+
+	public String collectContent(Post post){
 		String result = post.getContent();
 		for(Answer answer : post.getAnswers()){
 			result += answer.getContent() + " ";

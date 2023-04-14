@@ -1,4 +1,4 @@
-package com.jiyun.recode.domain.result.dto;
+package com.jiyun.recode.domain.analysis.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;
