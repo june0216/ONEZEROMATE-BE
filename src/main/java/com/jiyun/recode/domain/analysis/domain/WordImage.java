@@ -19,7 +19,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class WordVisualFile extends BaseTimeEntity {
+public class WordImage extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -41,7 +41,7 @@ public class WordVisualFile extends BaseTimeEntity {
 
 
 	@Builder
-	public WordVisualFile(String filename, String filetype, String url)
+	public WordImage(String filename, String filetype, String url)
 	{
 		this.filename = filename;
 		this.filetype = filetype;

@@ -1,11 +1,15 @@
 package com.jiyun.recode.domain.analysis.controller;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jiyun.recode.domain.account.domain.Account;
+import com.jiyun.recode.domain.analysis.domain.WordImage;
 import com.jiyun.recode.domain.analysis.dto.AnalysisReqDto;
 import com.jiyun.recode.domain.analysis.dto.EmotionResDto;
 import com.jiyun.recode.domain.analysis.dto.KeywordResDto;
+import com.jiyun.recode.domain.analysis.dto.WordImageResDto;
 import com.jiyun.recode.domain.analysis.service.AnalysisService;
+import com.jiyun.recode.domain.analysis.service.WordImageService;
 import com.jiyun.recode.domain.auth.service.AuthUser;
 import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.service.PostService;
@@ -13,11 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.Charset;
 import java.util.UUID;
@@ -32,6 +34,12 @@ public class DiaryAnalysisController {
 
 	private final PostService postService;
 	private final AnalysisService analysisService;
+
+	private String S3Bucket = "j4j-test-bucket"; // Bucket 이름
+
+	private final AmazonS3Client amazonS3Client;
+
+	private final WordImageService wordImageService;
 
 	@GetMapping("/emotion")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
@@ -99,6 +107,19 @@ public class DiaryAnalysisController {
 		return responseEntity;
 
 	}
+
+	@PostMapping("/uploads")
+	public ResponseEntity<Object> uploadFiles(@AuthUser Account account,
+			@RequestPart(value = "files") MultipartFile image) {
+		UUID id = wordImageService.uploadFiles(account, image);
+		WordImage wordImage = wordImageService.findById(id);
+
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new WordImageResDto(wordImage));
+	}
+
+
 
 
 }
