@@ -13,6 +13,7 @@ import com.jiyun.recode.domain.analysis.service.WordImageService;
 import com.jiyun.recode.domain.auth.service.AuthUser;
 import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.service.PostService;
+import com.jiyun.recode.global.custom.CustomMultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -79,6 +80,7 @@ public class DiaryAnalysisController {
 
 		ObjectMapper mapper = new ObjectMapper();
 
+
 		String jsonInString = mapper.writeValueAsString(responseEntity.getBody());
 		//analysisService.uploadEmotion(postId, jsonInString);
 
@@ -88,7 +90,7 @@ public class DiaryAnalysisController {
 
 	@GetMapping ("/keywords")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
-	public ResponseEntity<KeywordResDto> getDiaryKeywordsVisual(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
+	public ResponseEntity<Object> getDiaryKeywordsVisual(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
 		Post post = postService.findById(postId);
 		String content = postService.collectContent(post);
 		AnalysisReqDto request = new AnalysisReqDto(content);
@@ -97,14 +99,20 @@ public class DiaryAnalysisController {
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<KeywordResDto> responseEntity = restTemplate.exchange(host+keywordPort, HttpMethod.POST, entity, KeywordResDto.class);
+		ResponseEntity<byte[]> response = restTemplate.exchange(host+keywordPort, HttpMethod.GET, entity, byte[].class);
 
-		ObjectMapper mapper = new ObjectMapper();
 
-		String jsonInString = mapper.writeValueAsString(responseEntity.getBody());
-		//analysisService.uploadEmotion(postId, jsonInString);
+		byte[] byteImage = response.getBody();
+		CustomMultipartFile multipartFile = new CustomMultipartFile(byteImage);
+		//MultipartFile image = new MockMultipartFile(fileName, imageBytes);
 
-		return responseEntity;
+		UUID id = wordImageService.uploadFiles(account, multipartFile);
+		WordImage wordImage = wordImageService.findById(id);
+
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new WordImageResDto(wordImage));
+
 
 	}
 

@@ -36,5 +36,7 @@ public class ResponseConstant {
 
 	public static final String CERTIFICATION_CODE_NOT_MATCH = "인증 코드가 일치하지 않습니다.";
 
+	public static final String CREATE_IMAGE_SUCCESS = "성공적으로 이미지 생성에 성공했습니다.";
+
 
 }
