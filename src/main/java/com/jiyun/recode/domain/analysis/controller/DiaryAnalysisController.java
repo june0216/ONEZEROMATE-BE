@@ -1,13 +1,9 @@
 package com.jiyun.recode.domain.analysis.controller;
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.analysis.domain.WordImage;
-import com.jiyun.recode.domain.analysis.dto.AnalysisReqDto;
-import com.jiyun.recode.domain.analysis.dto.EmotionResDto;
-import com.jiyun.recode.domain.analysis.dto.KeywordResDto;
-import com.jiyun.recode.domain.analysis.dto.WordImageResDto;
+import com.jiyun.recode.domain.analysis.dto.*;
 import com.jiyun.recode.domain.analysis.service.AnalysisService;
 import com.jiyun.recode.domain.analysis.service.WordImageService;
 import com.jiyun.recode.domain.auth.service.AuthUser;
@@ -38,7 +34,7 @@ public class DiaryAnalysisController {
 
 	private String S3Bucket = "j4j-test-bucket"; // Bucket 이름
 
-	private final AmazonS3Client amazonS3Client;
+	//private final AmazonS3Client amazonS3Client;
 
 	private final WordImageService wordImageService;
 
@@ -53,33 +49,34 @@ public class DiaryAnalysisController {
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<EmotionResDto> responseEntity = restTemplate.exchange(host+emotionPort, HttpMethod.POST, entity, EmotionResDto.class);
+		ResponseEntity<EmotionResDto> responseEntity = restTemplate.exchange(host+emotionUri, HttpMethod.POST, entity, EmotionResDto.class);
 
 		ObjectMapper mapper = new ObjectMapper();
 
 		String jsonInString = mapper.writeValueAsString(responseEntity.getBody());
 
+
 		analysisService.uploadEmotion(post, jsonInString);
 
-		return responseEntity;
-
+		return ResponseEntity.ok().body(new EmotionResDto(jsonInString));
 	}
 
 	@GetMapping ("/keywords")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
-	public ResponseEntity<KeywordResDto> getDiaryKeywords(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
+	public ResponseEntity<KeywordListResDto> getDiaryKeywords(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
 		Post post = postService.findById(postId);
 		String content = postService.collectContent(post);
+		System.out.println(content);
 		AnalysisReqDto request = new AnalysisReqDto(content);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<KeywordResDto> responseEntity = restTemplate.exchange(host+keywordPort, HttpMethod.POST, entity, KeywordResDto.class);
+		ResponseEntity<KeywordListResDto> responseEntity = restTemplate.exchange(host+keywordUri, HttpMethod.POST, entity, KeywordListResDto.class);
 
 		ObjectMapper mapper = new ObjectMapper();
-
+		//KeywordListResDto keywordResDtoList = mapper.readValue(responseEntity.getBody(), KeywordListResDto.class);
 
 		String jsonInString = mapper.writeValueAsString(responseEntity.getBody());
 		//analysisService.uploadEmotion(postId, jsonInString);
@@ -88,7 +85,7 @@ public class DiaryAnalysisController {
 
 	}
 
-	@GetMapping ("/keywords")
+	@GetMapping ("/keywords/images")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<Object> getDiaryKeywordsVisual(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
 		Post post = postService.findById(postId);
@@ -99,7 +96,7 @@ public class DiaryAnalysisController {
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<byte[]> response = restTemplate.exchange(host+keywordPort, HttpMethod.GET, entity, byte[].class);
+		ResponseEntity<byte[]> response = restTemplate.exchange(host+keywordImageUri, HttpMethod.POST, entity, byte[].class);
 
 
 		byte[] byteImage = response.getBody();
