@@ -1,7 +1,8 @@
 package com.jiyun.recode.global.constant;
 
 public class ResourceConstant {
-	public static String host = "http://127.0.0.1";
-	public static String emotionPort = ":5000/api";
-	public static String keywordPort = ":5050";
+	public static String host = "http://127.0.0.1:5000";
+	public static String emotionUri = "/api/emotion";
+	public static String keywordUri = "/api/analysis/keywords";
+	public static String keywordImageUri = "/analysis/keywords/images";
 }
