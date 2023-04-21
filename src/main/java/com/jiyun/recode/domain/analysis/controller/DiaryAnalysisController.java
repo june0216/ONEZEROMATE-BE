@@ -32,7 +32,7 @@ public class DiaryAnalysisController {
 	private final PostService postService;
 	private final AnalysisService analysisService;
 
-	private String S3Bucket = "j4j-test-bucket"; // Bucket 이름
+	private String S3Bucket = "bucket"; // Bucket 이름
 
 	//private final AmazonS3Client amazonS3Client;
 
