@@ -2,7 +2,9 @@ package com.jiyun.recode.global.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +28,13 @@ public class S3Configuration {
 				.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
 				.withRegion(region)
+				.build();
+	}
+
+	@Bean
+	public static AmazonS3Client amazonS3Client() {
+		return (AmazonS3Client) AmazonS3ClientBuilder.standard()
+				.withCredentials(new DefaultAWSCredentialsProviderChain())
 				.build();
 	}
 }

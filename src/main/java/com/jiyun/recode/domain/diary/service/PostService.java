@@ -34,6 +34,11 @@ public class PostService {
 	{
 		List<Question> questionList = findAllRandomList();
 		Post post = postRepository.save(requestDto.toEntity(writer));
+		createAnswer(questionList, post);
+
+		return post.getPostId();
+	}
+	public void createAnswer(List<Question> questionList, Post post){
 		for(Question question : questionList)
 		{
 			Answer answer = Answer.builder()
@@ -41,9 +46,9 @@ public class PostService {
 					.post(post)
 					.build();
 			post.addAnswer(answer);
-		}
+			answerRepository.save(answer);
 
-		return post.getPostId();
+		}
 	}
 
 
@@ -57,16 +62,33 @@ public class PostService {
 	}
 
 	private void updateAnswer(Post post, PostReqDto.Update requestDto){
-		for(QnaReqDto q : requestDto.getQnaList()){ // 이중 for문 개선 필요
-			for(Answer answer : post.getAnswers()){
-				if(answer.getQuestion().getQuestionId() == q.getQuestion_id()){
-					answer.updateAnswer(q.getAnswerContent());
-					answerRepository.save(answer);
-					post.addAnswer(answer);
+		List<QnaReqDto> qnaList = requestDto.getQnaList();
+		List<Answer> answerList = post.getAnswers();
+
+		for (QnaReqDto qnaReqDto : qnaList) {
+			Long questionId = qnaReqDto.getQuestion_id();
+			String answerContent = qnaReqDto.getAnswerContent();
+
+			for (Answer answer : answerList) {
+				Question question = answer.getQuestion();
+
+				if (question.getQuestionId() == questionId) {
+					answer.updateAnswer(answerContent);
 				}
 			}
 		}
 	}
+			/*for(QnaReqDto q : requestDto.getQnaList()){ // 이중 for문 개선 필요
+			System.out.println(q.getAnswerContent());
+			for(Answer answer : post.getAnswers()){
+				System.out.println(answer.getAnswerId());
+				if(answer.getQuestion().getQuestionId() == q.getQuestion_id()){
+					System.out.println("true");
+					answer.updateAnswer(q.getAnswerContent());
+					post.addAnswer(answer);
+				}
+			}
+		}*/
 
 
 
