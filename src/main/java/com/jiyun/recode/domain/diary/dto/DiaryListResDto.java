@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 public class DiaryListResDto {
 	private Integer count;
 	private List<DiaryResDto> diaryList;
-	private Integer month;
+	private String year;
+	private String month;
 	@Getter
 	public static class DiaryResDto{
 		private String emotionEmoji;
@@ -33,10 +34,11 @@ public class DiaryListResDto {
 		}
 
 	}
-	public static DiaryListResDto of(List<Post> postList, Integer month) {
+	public static DiaryListResDto of(List<Post> postList, String year, String month) {
 		return DiaryListResDto.builder()
 				.diaryList(postList.stream().map(DiaryResDto::of).collect(Collectors.toList()))
 				.count(postList.size())
+				.year(year)
 				.month(month)
 				.build();
 	}

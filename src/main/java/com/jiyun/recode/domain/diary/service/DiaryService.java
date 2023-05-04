@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -18,8 +19,9 @@ public class DiaryService {
 	private final PostRepository postRepository;
 
 	@Transactional(readOnly = true)
-	public List<Post> findByMonth(Account accont, Integer month)
+	public List<Post> findByMonth(Account account, String year, String month)
 	{
-		return postRepository.findAllByWriterAndDateMonth(accont,month);
+		UUID accountId = account.getAccountId();
+		return postRepository.findByDateMonthAndWriter(accountId ,year, month);
 	}
 }
