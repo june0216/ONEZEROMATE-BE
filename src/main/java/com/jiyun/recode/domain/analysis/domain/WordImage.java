@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.URL;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.UUID;
@@ -38,6 +35,9 @@ public class WordImage extends BaseTimeEntity {
 	@Column(length = 36)
 	@NotNull
 	private String filetype;
+
+	//@ManyToOne
+
 
 
 	@Builder

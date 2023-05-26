@@ -32,7 +32,9 @@ public class Post extends BaseTimeEntity {
 	@Column
 	private String content;
 
-	private String emtionEmoji;
+	@NotNull
+	@Column(length = 10)
+	private Emotion emotion;
 
 
 
@@ -44,6 +46,10 @@ public class Post extends BaseTimeEntity {
 	@ManyToOne
 	@JoinColumn(name = "account_id")
 	private Account writer;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "diary_id", updatable = false)
+	private Diary diary;
 
 	@Builder
 	public Post(LocalDate date, String content,Account writer) {
@@ -58,9 +64,14 @@ public class Post extends BaseTimeEntity {
 		this.date = date;
 	}
 
-	public void emojiResult(String emtionEmoji)
-	{
-		this.emtionEmoji = emtionEmoji;
+	public Emotion setEmotionFromString(String emotionString) {
+		try {
+			this.emotion = Emotion.fromString(emotionString);
+		} catch (IllegalArgumentException e) {
+			// The given string does not match any of the predefined Emotion values.
+			// Handle this case as you see fit.
+		}
+		return emotion;
 	}
 	public void updateContent(String content)
 	{
@@ -73,6 +84,17 @@ public class Post extends BaseTimeEntity {
 
 		//answer.setPost(this);
 	}
+
+	public void setDiary(Diary diary) {
+		if(this.diary != null)
+		{
+			this.diary.getPostList().remove(this);
+
+		}
+		this.diary = diary;
+		diary.getPostList().add(this);
+	}
+
 
 
 

@@ -5,6 +5,7 @@ import com.jiyun.recode.domain.diary.domain.Post;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 public class PostReqDto {
@@ -15,11 +16,15 @@ public class PostReqDto {
 	@AllArgsConstructor(access = AccessLevel.PRIVATE) // 외부에서 접근 막음
 	@NoArgsConstructor(access = AccessLevel.PROTECTED) // @RequestBody 시에 빈 생성자가 있어야 한다.
 	public static class Create {
-		private LocalDate date;
+		private Integer year;
+		private Integer date;
+		private String month;
 
 		public Post toEntity(Account writer) {
+			Month monthEnum = Month.valueOf(month.toUpperCase());  // 월 문자열을 Month enum으로 변환
+			LocalDate dateTime = LocalDate.of(year, monthEnum, date);
 			return Post.builder()
-					.date(date)
+					.date(dateTime)
 					.writer(writer)
 					.build();
 		}

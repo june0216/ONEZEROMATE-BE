@@ -1,6 +1,7 @@
 package com.jiyun.recode.domain.diary.api;
 
 import com.jiyun.recode.domain.account.domain.Account;
+import com.jiyun.recode.domain.analysis.dto.EmotionResDto;
 import com.jiyun.recode.domain.auth.service.AuthUser;
 import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.dto.PostReqDto;
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.UUID;
 
 
@@ -27,6 +29,10 @@ public class PostController {
 	@PostMapping
 	public ResponseEntity<PostResDto> createForm(@RequestBody @Valid final PostReqDto.Create requestDto,
 												 @AuthUser Account account) {
+		LocalDate currentDate = LocalDate.now();
+/*		if (requestDto.getDate().isAfter(currentDate)) {
+			throw new IllegalArgumentException();
+		}*/
 		UUID postId = postService.createForm(requestDto, account);
 		Post post = postService.findById(postId);
 		return ResponseEntity.ok()
@@ -58,6 +64,24 @@ public class PostController {
 		postService.delete(postId, account);
 		return ResponseEntity.ok()
 				.body("게시물이 삭제되었습니다.");
+	}
+
+	@GetMapping("{postId}/result/emotion")
+	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
+	public ResponseEntity<EmotionResDto> readEmotion(@PathVariable final UUID postId, @AuthUser Account account) {
+		Post post = postService.findById(postId);
+
+		return ResponseEntity.ok()
+				.body(new EmotionResDto(post.getEmotion().name()));
+	}
+
+	@GetMapping("{postId}/result/keyword")
+	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
+	public ResponseEntity<EmotionResDto> readKeyword(@PathVariable final UUID postId, @AuthUser Account account) {
+		Post post = postService.findById(postId);
+
+		return ResponseEntity.ok()
+				.body(new EmotionResDto(post.getEmotion().name()));
 	}
 
 
