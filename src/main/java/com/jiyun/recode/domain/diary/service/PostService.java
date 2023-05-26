@@ -122,6 +122,13 @@ public class PostService {
 				.orElseThrow(() -> new IllegalArgumentException()); //TODO: 에외처리
 	}
 
+	@Transactional(readOnly = true)
+	public List<Post> findPostsByMonthAndYear(Account account, String year, String month)
+	{
+		UUID accountId = account.getAccountId();
+		return postRepository.findByDateMonthAndWriter(accountId ,year, month);
+	}
+
 
 
 

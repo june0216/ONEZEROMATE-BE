@@ -24,7 +24,7 @@ public class DiaryListResDto {
 		private LocalDate date;
 
 		public DiaryResDto(Post post) {
-			this.emotionEmoji = post.getEmtionEmoji();
+			this.emotionEmoji = post.getEmotion().getTitle();
 			this.date = post.getDate();
 		}
 
