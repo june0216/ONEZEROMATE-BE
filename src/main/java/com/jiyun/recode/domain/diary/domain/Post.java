@@ -32,7 +32,6 @@ public class Post extends BaseTimeEntity {
 	@Column
 	private String content;
 
-	@NotNull
 	@Column(length = 10)
 	private Emotion emotion;
 
@@ -81,8 +80,9 @@ public class Post extends BaseTimeEntity {
 	//편의메서드
 	public void addAnswer(Answer answer) {
 		answers.add(answer);
+		answer.setPost(this);
 
-		//answer.setPost(this);
+
 	}
 
 	public void setDiary(Diary diary) {

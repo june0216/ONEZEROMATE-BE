@@ -43,4 +43,9 @@ public class Answer extends BaseTimeEntity {
 	{
 		this.content= content;
 	}
+
+	public void setPost(Post post){
+		this.post = post;
+	}
+
 }

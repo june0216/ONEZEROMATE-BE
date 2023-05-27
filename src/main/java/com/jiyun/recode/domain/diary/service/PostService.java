@@ -33,23 +33,47 @@ public class PostService {
 	public UUID createForm(PostReqDto.Create requestDto, Account writer)
 	{
 		List<Question> questionList = findAllRandomList();
-		Post post = postRepository.save(requestDto.toEntity(writer));
-		createAnswer(questionList, post);
+		Post post = requestDto.toEntity(writer);
+		log.info("Created Post entity: {}", post);
 
+		if (post == null) {
+			log.error("Post entity creation failed.");
+			throw new IllegalArgumentException("Post entity creation failed.");
+		}
+
+		post = postRepository.save(post);
+		log.info("Saved Post entity: {}", post);
+		createAnswer(questionList, post);
+		log.info("Created answers for the Post");
 		return post.getPostId();
 	}
+
 	public void createAnswer(List<Question> questionList, Post post){
+		log.info("Starting createAnswer method...");
+
 		for(Question question : questionList)
 		{
+			log.info("Creating answer for question: {}", question);
+
 			Answer answer = Answer.builder()
 					.question(question)
 					.post(post)
 					.build();
-			post.addAnswer(answer);
-			answerRepository.save(answer);
+			log.info("Created answer: {}", answer);
 
+			if (answer == null) {
+				log.error("Answer creation failed.");
+				throw new IllegalArgumentException("Answer creation failed.");
+			}
+
+			answerRepository.save(answer);
+			log.info("Saved answer: {}", answer);
+
+			post.addAnswer(answer);
+			log.info("Added answer to post: {}", post);
 		}
 	}
+
 
 
 	public UUID update(UUID postId, PostReqDto.Update requestDto)
