@@ -45,10 +45,6 @@ public class PostReqDto {
 
 		private String content;
 		private List<QnaReqDto> qnaList;
-/*		private List<Long> questionList;
-		private List<UUID> answerIdList;
-		private List<String> answerList;*/
-		private LocalDate date;
 
 	}
 }
