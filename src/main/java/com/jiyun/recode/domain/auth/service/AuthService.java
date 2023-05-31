@@ -2,10 +2,8 @@ package com.jiyun.recode.domain.auth.service;
 
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.account.repository.AccountRepository;
-import com.jiyun.recode.domain.auth.dto.AccessTokenRefreshReqDto;
-import com.jiyun.recode.domain.auth.dto.LoginReqDto;
-import com.jiyun.recode.domain.auth.dto.LoginResDto;
-import com.jiyun.recode.domain.auth.dto.TokenResDto;
+import com.jiyun.recode.domain.auth.dao.CertificationDao;
+import com.jiyun.recode.domain.auth.dto.*;
 import com.jiyun.recode.global.exception.CustomException.AccountNotFoundException;
 import com.jiyun.recode.global.exception.CustomException.InvalidTokenException;
 import com.jiyun.recode.global.exception.CustomException.RefreshTokenNotFoundException;
@@ -18,8 +16,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Slf4j
 @Service
@@ -30,18 +28,45 @@ public class AuthService {
 	final private PasswordEncoder passwordEncoder;
 	final private JwtProvider jwtProvider;
 	final private RedisService redisService;
+	final private CertificationDao certificationDao;
+	final private MailService mailService;
 
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-	@Transactional//TODO:readOnly 적용
+	@Transactional(readOnly = true)
 	public boolean isExistedEmail(String email){
 		return accountRepository.existsByEmail(email);
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public String findNicknameByEmail(String email){
 		Account account = accountRepository.findByEmail(email).orElseThrow(() -> new AccountNotFoundException());
 		return account.getNickname();
+	}
+
+	@Transactional(readOnly = true)
+	public Account findByEmail(String email){
+		return accountRepository.findByEmail(email).orElseThrow(() -> new AccountNotFoundException());
+	}
+
+	public void getTempString(EmailReqDto reqDto) {
+		char[] charSet = new char[]{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+				'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+				'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+		StringBuilder tempString = new StringBuilder();
+
+		/* 문자 배열 길이의 값을 랜덤으로 10개를 뽑아 조합 */
+		int idx = 0;
+		for(int i = 0; i < 10; i++){
+			idx = (int) (charSet.length * Math.random());
+			tempString.append(charSet[idx]);
+		}
+		String certiCode = tempString.toString();
+		certificationDao.createEmailCertification(reqDto.getEmail(), certiCode);
+		mailService.sendMail(mailService.createMail(certiCode, reqDto.getEmail()));
+
+
 	}
 
 	@Transactional
@@ -98,7 +123,6 @@ public class AuthService {
 		return new LoginResDto(nickname,newAccessToken);
 	}
 
-	@Transactional
 	public void signOut(String accessToken) {
 		Authentication authentication = jwtProvider.getAuthentication(accessToken);
 
@@ -115,5 +139,6 @@ public class AuthService {
 	public UsernamePasswordAuthenticationToken getAuthenticationToken(String email, String password) {
 		return new UsernamePasswordAuthenticationToken(email, password);
 	}
+
 
 }

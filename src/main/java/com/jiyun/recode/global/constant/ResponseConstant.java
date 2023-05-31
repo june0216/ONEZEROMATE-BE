@@ -25,6 +25,7 @@ public class ResponseConstant {
 	// exception
 	public static final String DUPLICATE_NICKNAME = "중복된 닉네임이 존재합니다.";
 	public static final String DUPLICATE_EMAIL = "중복된 이메일이 존재합니다.";
+	public static final String INVALID_EMAIL = "인증받지 않은 이메일입니다.";
 	public static final String PASSWORD_NOT_MATCH = "비밀번호가 일치하지 않습니다.";
 	public static final String ACCOUNT_NOT_FOUND = "해당 계정을 찾을 수 없습니다.";
 

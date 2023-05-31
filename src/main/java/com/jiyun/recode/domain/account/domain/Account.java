@@ -1,7 +1,7 @@
 package com.jiyun.recode.domain.account.domain;
 
 
-import com.jiyun.recode.global.entity.BaseTimeEntity;
+import com.jiyun.recode.global.time.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

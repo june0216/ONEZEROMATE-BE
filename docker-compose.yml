@@ -42,7 +42,7 @@ services:
   certbot:
     image: certbot/certbot:latest
     container_name: certbot_onezeromate
-    command: certonly --webroot --webroot-path=/var/www/certbot --email ziyun1612@ewhain.net --agree-tos --no-eff-email -d onezeromate.com
+#    command: certonly --webroot --webroot-path=/var/www/certbot --email ziyun1612@ewhain.net --agree-tos --no-eff-email -d onezeromate.com
     volumes:
       - ./certbot/www/:/var/www/certbot:rw   # ssl 인증 시 접근 경로
       - ./certbot/conf/:/etc/letsencrypt:rw   # ssl 인증서 생성 위치

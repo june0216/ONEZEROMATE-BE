@@ -1,4 +1,4 @@
-package com.jiyun.recode.global.entity;
+package com.jiyun.recode.global.time;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

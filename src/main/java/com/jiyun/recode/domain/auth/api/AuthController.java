@@ -1,10 +1,8 @@
 package com.jiyun.recode.domain.auth.api;
 
-import com.jiyun.recode.domain.auth.dto.AccessTokenRefreshReqDto;
-import com.jiyun.recode.domain.auth.dto.LoginReqDto;
-import com.jiyun.recode.domain.auth.dto.LoginResDto;
-import com.jiyun.recode.domain.auth.dto.TokenResDto;
+import com.jiyun.recode.domain.auth.dto.*;
 import com.jiyun.recode.domain.auth.service.AuthService;
+import com.jiyun.recode.domain.auth.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +16,7 @@ import javax.validation.Valid;
 import java.util.concurrent.TimeUnit;
 
 import static com.jiyun.recode.global.constant.ResponseConstant.LOGOUT_SUCCESS;
+import static com.jiyun.recode.global.constant.ResponseConstant.SEND_EMAIL_SUCCESS;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @Slf4j
@@ -27,6 +26,23 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 public class AuthController {
 	private final AuthService authService;
 
+	private final MailService mailService;
+
+
+
+	@PostMapping("/certification/sends")
+	public ResponseEntity<String> sendEmail(@Valid @RequestBody EmailReqDto reqDto){
+		authService.getTempString(reqDto);
+
+		return ResponseEntity.ok(SEND_EMAIL_SUCCESS);
+	}
+
+	@PostMapping("/certification/comfirms")
+	public ResponseEntity<String> confirmTempString(@Valid @RequestBody CertificationReqDto reqDto){
+		String response = mailService.verifyEmail(reqDto);
+		return ResponseEntity.ok(response);
+
+	}
 	@PostMapping("/login")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseEntity<LoginResDto> login(@RequestBody @Valid final LoginReqDto requestDto) {
