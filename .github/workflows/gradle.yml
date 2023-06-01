@@ -108,7 +108,6 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_REPO }}/onezeromate-web
           sudo docker pull ${{ secrets.DOCKER_REPO }}/onezeromate
           sudo docker-compose -f /home/ubuntu/srv/ubuntu/docker-compose.yml up -d
-          sudo docker compose run --rm certbot certonly --webroot --webroot-path=/var/www/certbot --email ziyun1612@ewhain.net --agree-tos --no-eff-email -d server.onezeromate.com
           sudo docker-compose restart nginx
           docker image prune -f
         # REMOVE Github IP FROM security group (9)
