@@ -27,8 +27,8 @@ public class JwtProvider {
 	@Value("${spring.jwt.secret-key}")
 	private String secretKey;
 
-	private final Long accessTokenValidationMs = 30 * 60 * 1000L;
-
+	// 추후 이것으로 변경 private final Long accessTokenValidationMs = 30 * 60 * 1000L;
+	private final Long accessTokenValidationMs = 240 * 60 * 1000L;
 	private final Long refreshTokenValidationMs = 15 * 24 * 60 * 60 * 1000L;
 
 	public Long getRefreshTokenValidationMs() { // Redis에 저장 시 사용

@@ -44,7 +44,7 @@ public class AccountService {
 		if (isExistedEmail(reqDto.getEmail())){
 			throw new EmailDuplicateException();
 		}
-		if(mailService.isVerify(reqDto.getEmail())){
+		if(!mailService.isVerify(reqDto.getEmail())){ //TODO : 프론트 개발을 위해 임시 조건 변경
 			certificationDao.removeEmailCertification(reqDto.getEmail());
 			String encodedPassword = encodePassword(reqDto.getPassword());
 			Account account = accountRepository.save(reqDto.toEntity(encodedPassword));

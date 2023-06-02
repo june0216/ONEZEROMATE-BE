@@ -25,6 +25,8 @@ public class PostReqDto {
 			LocalDate dateTime = LocalDate.of(year, monthEnum, date);
 			return Post.builder()
 					.date(dateTime)
+					.year(year)
+					.month(monthEnum.getValue())
 					.writer(writer)
 					.build();
 		}

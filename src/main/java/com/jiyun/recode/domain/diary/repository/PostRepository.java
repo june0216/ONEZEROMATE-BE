@@ -12,7 +12,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
 
 
-	@Query(value = "SELECT * FROM post d WHERE d.account_id=:accountId AND YEAR(d.date)=:year AND MONTH(d.date)=:month", nativeQuery = true)
-	List<Post> findByDateMonthAndWriter(@Param("accountId") UUID accountId, @Param("year") String year, @Param("month") String month);
+	@Query(value = "SELECT * FROM post d WHERE d.account_id=:accountId AND YEAR(d.date) = :year AND MONTH(d.date) = :month", nativeQuery = true)
+	List<Post> findByDateMonthAndWriter(@Param("accountId") UUID accountId, @Param("year") int year, @Param("month") int month);
 
 }

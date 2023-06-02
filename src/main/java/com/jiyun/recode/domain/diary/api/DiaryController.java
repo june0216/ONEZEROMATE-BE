@@ -26,8 +26,9 @@ public class DiaryController {
 
 	@GetMapping("/{year}")
 	@PreAuthorize("isAuthenticated() or hasRole('ROLE_ADMIN')")
-	public ResponseEntity<DiaryListResDto> readPost(@PathVariable final String year, @RequestParam final String month, @AuthUser Account account) {
+	public ResponseEntity<DiaryListResDto> readPost(@PathVariable final String year, @RequestParam final Integer month, @AuthUser Account account) {
 		List<Post> posts = postService.findPostsByMonthAndYear(account, year, month);
+		System.out.println(posts);
 		return ResponseEntity.ok()
 				.body(DiaryListResDto.of(posts, year, month));
 	}

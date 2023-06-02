@@ -12,9 +12,10 @@ public enum Emotion {
 	NEUTRALITY(4, "중립", "NEUTRALITY"),
 	AVERSION(6, "우울","AVERSION"),
 
-	SURPRISE(2, "놀람", "SURPRISE"),
+	SURPRISE(1, "놀람", "SURPRISE"),
 	ANGER(2, "화남", "ANGER"),
-	ANXIETY(0, "불안", "ANXIETY");
+	ANXIETY(0, "불안", "ANXIETY"),
+	DEFAULT(8, "기본", "DEFAULT");
 	private final Integer Id;
 
 	private final String title;

@@ -29,6 +29,14 @@ public class Post extends BaseTimeEntity {
 	@Column(length = 10)
 	private LocalDate date;
 
+	@NotNull
+	@Column
+	private Integer year;
+
+	@NotNull
+	@Column
+	private Integer month;
+
 	@Column
 	private String content;
 
@@ -51,10 +59,13 @@ public class Post extends BaseTimeEntity {
 	private Diary diary;
 
 	@Builder
-	public Post(LocalDate date, String content,Account writer) {
+	public Post(LocalDate date, String content,Account writer, Integer year, Integer month) {
 		this.date = date;
 		this.content = content;
 		this.writer = writer;
+		this.year = year;
+		this.month = month;
+		this.emotion = Emotion.DEFAULT;
 	}
 
 

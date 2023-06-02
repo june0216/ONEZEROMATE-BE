@@ -147,10 +147,11 @@ public class PostService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Post> findPostsByMonthAndYear(Account account, String year, String month)
+	public List<Post> findPostsByMonthAndYear(Account account, String year, Integer month)
 	{
 		UUID accountId = account.getAccountId();
-		return postRepository.findByDateMonthAndWriter(accountId ,year, month);
+		Integer yearToInt = Integer.parseInt(year);
+		return postRepository.findByDateMonthAndWriter(accountId ,yearToInt, month);
 	}
 
 
