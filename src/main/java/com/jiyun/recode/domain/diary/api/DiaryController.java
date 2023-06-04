@@ -27,7 +27,8 @@ public class DiaryController {
 	@GetMapping("/{year}")
 	@PreAuthorize("isAuthenticated() or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<DiaryListResDto> readPost(@PathVariable final String year, @RequestParam final Integer month, @AuthUser Account account) {
-		List<Post> posts = postService.findPostsByMonthAndYear(account, year, month);
+		Integer yearToInt = Integer.parseInt(year);
+		List<Post> posts = postService.findPostsByMonthAndYear(account, yearToInt, month);
 		System.out.println(posts);
 		return ResponseEntity.ok()
 				.body(DiaryListResDto.of(posts, year, month));
@@ -35,8 +36,10 @@ public class DiaryController {
 
 	@GetMapping("emotion/{year}")
 	@PreAuthorize("isAuthenticated() or hasRole('ROLE_ADMIN')")
-	public ResponseEntity<DiaryMonthEmotionResDto> readEmotion(@PathVariable final String year, @RequestParam final String month,  @AuthUser Account account) {
-		Diary diary = diaryService.findByMonthAndYear(account, year, month);
+	public ResponseEntity<DiaryMonthEmotionResDto> readEmotion(@PathVariable final String year, @RequestParam final Integer month,  @AuthUser Account account) {
+		Integer yearToInt = Integer.parseInt(year);
+		Diary diary = diaryService.findByMonthAndYear(account, yearToInt , month);
+		System.out.println("dks");
 		return ResponseEntity.ok()
 				.body(new DiaryMonthEmotionResDto(diary));
 	}
