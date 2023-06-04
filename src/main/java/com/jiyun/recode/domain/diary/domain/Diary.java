@@ -3,6 +3,7 @@ package com.jiyun.recode.domain.diary.domain;
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.global.time.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -23,6 +24,7 @@ public class Diary extends BaseTimeEntity {
 	private UUID diaryId;
 
 	@ManyToOne
+	@JoinColumn(name = "account_id")
 	Account owner;
 
 
@@ -31,7 +33,7 @@ public class Diary extends BaseTimeEntity {
 	private Double sadnessCount;
 	private Double neutralityCount;
 	private Double aversionCount;
-	private Double SurpriseCount;
+	private Double surpriseCount;
 	private Double angerCount;
 	private Double anxietyCount;
 
@@ -42,9 +44,18 @@ public class Diary extends BaseTimeEntity {
 	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Post> postList = new ArrayList<>();
 
-	public Diary(Integer year,Integer month){
+	@Builder
+	public Diary(Integer year,Integer month, Account owner){
+		this.owner = owner;
 		this.year = year;
 		this.month = month;
+		this.happyCount = 0.0;
+		this.sadnessCount = 0.0;
+		this.angerCount = 0.0;
+		this.anxietyCount = 0.0;
+		this.aversionCount = 0.0;
+		this.neutralityCount = 0.0;
+		this.surpriseCount = 0.0;
 	}
 
 
@@ -64,7 +75,7 @@ public class Diary extends BaseTimeEntity {
 				this.aversionCount++;
 				break;
 			case SURPRISE:
-				this.SurpriseCount++;
+				this.surpriseCount++;
 				break;
 			case ANGER:
 				this.angerCount++;
@@ -74,6 +85,11 @@ public class Diary extends BaseTimeEntity {
 				break;
 		}
 	}
+
+	public void setPostList(Post post){
+		this.postList.add(post);
+	}
+
 
 
 

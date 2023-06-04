@@ -2,6 +2,7 @@ package com.jiyun.recode.domain.diary.service;
 
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.diary.domain.Answer;
+import com.jiyun.recode.domain.diary.domain.Diary;
 import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.domain.Question;
 import com.jiyun.recode.domain.diary.dto.PostReqDto;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Month;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +26,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PostService {
 	private final PostRepository postRepository;
+	private final DiaryService diaryService;
 	private final QuestionRepository questionRepository;
 	private final AnswerRepository answerRepository;
 
@@ -45,6 +48,13 @@ public class PostService {
 		log.info("Saved Post entity: {}", post);
 		createAnswer(questionList, post);
 		log.info("Created answers for the Post");
+		Diary diary = diaryService.findByMonthAndYear(writer, requestDto.getYear(), Month.valueOf(requestDto.getMonth()).getValue());
+
+		if(diary == null){
+			UUID diaryId = diaryService.createDiary(writer, requestDto.getYear(), Month.valueOf(requestDto.getMonth()).getValue());
+			diary = diaryService.findById(diaryId);
+		}
+		post.setDiary(diary);
 		return post.getPostId();
 	}
 
@@ -147,11 +157,11 @@ public class PostService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Post> findPostsByMonthAndYear(Account account, String year, Integer month)
+	public List<Post> findPostsByMonthAndYear(Account account, Integer year, Integer month)
 	{
 		UUID accountId = account.getAccountId();
-		Integer yearToInt = Integer.parseInt(year);
-		return postRepository.findByDateMonthAndWriter(accountId ,yearToInt, month);
+
+		return postRepository.findByDateMonthAndWriter(accountId ,year, month);
 	}
 
 

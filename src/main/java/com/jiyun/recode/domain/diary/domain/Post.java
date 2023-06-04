@@ -54,8 +54,8 @@ public class Post extends BaseTimeEntity {
 	@JoinColumn(name = "account_id")
 	private Account writer;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "diary_id", updatable = false)
+	@ManyToOne
+	@JoinColumn(name = "diary_id")
 	private Diary diary;
 
 	@Builder
@@ -103,7 +103,7 @@ public class Post extends BaseTimeEntity {
 
 		}
 		this.diary = diary;
-		diary.getPostList().add(this);
+		diary.setPostList(this);
 	}
 
 

@@ -35,6 +35,7 @@ public class PostController {
 		}*/
 		UUID postId = postService.createForm(requestDto, account);
 		Post post = postService.findById(postId);
+		System.out.println(post.getWriter());
 		return ResponseEntity.ok()
 				.body(new PostResDto(post));
 	}
