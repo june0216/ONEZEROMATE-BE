@@ -27,7 +27,7 @@ import static com.jiyun.recode.global.constant.ResourceConstant.*;
 @RestController
 @RequestMapping("api/v1/posts/{postId}/analysis")
 @RequiredArgsConstructor
-public class DiaryAnalysisController {
+public class AnalysisController {
 
 	private final PostService postService;
 	private final AnalysisService analysisService;
