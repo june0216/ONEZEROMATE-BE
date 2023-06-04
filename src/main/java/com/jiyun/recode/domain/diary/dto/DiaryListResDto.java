@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
@@ -20,11 +21,12 @@ public class DiaryListResDto {
 	private Integer month;
 	@Getter
 	public static class DiaryResDto{
+		private UUID postId;
 		private String emotionEmoji;
 		private LocalDate date;
 
 		public DiaryResDto(Post post) {
-
+			this.postId = post.getPostId();
 			this.emotionEmoji = post.getEmotion().getTitle();
 			this.date = post.getDate();
 		}
