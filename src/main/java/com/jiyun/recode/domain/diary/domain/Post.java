@@ -1,6 +1,7 @@
 package com.jiyun.recode.domain.diary.domain;
 
 import com.jiyun.recode.domain.account.domain.Account;
+import com.jiyun.recode.domain.analysis.domain.FoodRecommendation;
 import com.jiyun.recode.global.time.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -58,6 +59,10 @@ public class Post extends BaseTimeEntity {
 	@JoinColumn(name = "diary_id")
 	private Diary diary;
 
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "post_id")
+	private List<FoodRecommendation> foodRecommendations = new ArrayList<>();
+
 	@Builder
 	public Post(LocalDate date, String content,Account writer, Integer year, Integer month) {
 		this.date = date;
@@ -104,6 +109,15 @@ public class Post extends BaseTimeEntity {
 		}
 		this.diary = diary;
 		diary.setPostList(this);
+	}
+
+	public void setFood(FoodRecommendation food) {
+		if(this.foodRecommendations != null)
+		{
+			//this.diary.getPostList().remove(this);
+
+		}
+		this.foodRecommendations.add(food);
 	}
 
 
