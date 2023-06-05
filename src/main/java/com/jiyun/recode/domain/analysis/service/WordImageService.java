@@ -1,6 +1,7 @@
 package com.jiyun.recode.domain.analysis.service;
 
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.jiyun.recode.domain.account.domain.Account;
@@ -28,7 +29,7 @@ public class WordImageService {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucketName;
 
-	private final AmazonS3Client amazonS3Client;
+	private final AmazonS3 amazonS3Client;
 	private final WordImageRepository wordImageRepository;
 
 	/**
@@ -51,10 +52,10 @@ public class WordImageService {
 		try (InputStream inputStream = multipartFile.getInputStream()) {
 
 				String keyName = uploadFilePath + "/" + uploadFileName; // ex) 구분/년/월/일/파일.확장자
-
+			System.out.println("DJELRKWL어디까지");
 				// S3에 폴더 및 파일 업로드
 				amazonS3Client.putObject(
-						new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata));
+						new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
 
 				// TODO : 외부에 공개하는 파일인 경우 Public Read 권한을 추가, ACL 확인
         /*amazonS3Client.putObject(
@@ -67,6 +68,7 @@ public class WordImageService {
 		} catch (IOException e) {
 				e.printStackTrace();
 				log.error("Filed upload failed", e);
+				throw new RuntimeException("File upload failed", e);
 		}
 
 		WordImage wordImage = WordImage.builder()

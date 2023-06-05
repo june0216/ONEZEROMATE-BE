@@ -98,12 +98,17 @@ public class AnalysisController {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<byte[]> response = restTemplate.exchange(host+keywordImageUri, HttpMethod.POST, entity, byte[].class);
 
-
 		byte[] byteImage = response.getBody();
-		CustomMultipartFile multipartFile = new CustomMultipartFile(byteImage);
+		String contentType = response.getHeaders().getContentType().toString();
+
+		String originalFilename = UUID.randomUUID().toString();
+
+		CustomMultipartFile multipartFile = new CustomMultipartFile(byteImage, originalFilename, contentType);
 		//MultipartFile image = new MockMultipartFile(fileName, imageBytes);
 
+		System.out.println(multipartFile);
 		UUID id = wordImageService.uploadFiles(account, multipartFile);
+		System.out.println(id);
 		WordImage wordImage = wordImageService.findById(id);
 
 		return ResponseEntity
