@@ -33,12 +33,14 @@ services:
       - ./nginx/conf/:/etc/nginx/conf.d/:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/log:/var/log/nginx
-      - ./certbot/www:/var/www/certbot/:ro    # ssl 인증 시 접근 경로
-      - ./certbot/conf/:/etc/nginx/ssl/:ro    # ssl 인증서 생성 위치
-     # - ./certbot/www:/var/www/certbot/:ro    # ssl 인증 시 접근 경로
+      #- ./certbot/www:/var/www/certbot/:ro    # ssl 인증 시 접근 경로
+      #- ./certbot/www:/var/www/certbot/:ro    # ssl 인증 시 접근 경로
+      #- ./certbot/conf/:/etc/nginx/ssl/:ro    # ssl 인증서 생성 위치
      # - ./certbot/conf/:/etc/nginx/ssl/    # ssl 인증서 생성 위치 (read-only option 제거)
-      #- ./nginx.conf:/etc/nginx/nginx.conf
       #- ./certbot/conf:/etc/letsencrypt  # SSL certificates are accessible here
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
 
 
     depends_on:
@@ -49,8 +51,10 @@ services:
     container_name: certbot_onezeromate
     #    command: certonly --webroot --webroot-path=/var/www/certbot --email ziyun1612@ewhain.net --agree-tos --no-eff-email -d onezeromate.com
     volumes:
-      - ./certbot/www/:/var/www/certbot:rw   # ssl 인증 시 접근 경로
-      - ./certbot/conf/:/etc/nginx/ssl/   # ssl 인증서 생성 위치 (변경)
-      - ./certbot/log/:/var/log/letsencrypt:rw    # 로그 위치
+      #- ./certbot/www/:/var/www/certbot:rw   # ssl 인증 시 접근 경로
+      #- ./certbot/conf/:/etc/nginx/ssl/   # ssl 인증서 생성 위치 (변경)
+      #- ./certbot/log/:/var/log/letsencrypt:rw    # 로그 위치
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
     depends_on:
       - nginx
