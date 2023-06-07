@@ -12,6 +12,7 @@ import com.jiyun.recode.domain.diary.service.PostService;
 import com.jiyun.recode.global.custom.CustomMultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,8 @@ import static com.jiyun.recode.global.constant.ResourceConstant.*;
 @RequestMapping("api/v1/posts/{postId}/analysis")
 @RequiredArgsConstructor
 public class AnalysisController {
+	@Value("${server.host}")
+	public static String host;
 
 	private final PostService postService;
 	private final AnalysisService analysisService;

@@ -2,13 +2,14 @@ package com.jiyun.recode.domain.analysis.controller;
 
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.analysis.dto.FoodListResDto;
-import com.jiyun.recode.domain.analysis.dto.FoodReqDto;
+import com.jiyun.recode.domain.analysis.dto.RecommendationReqDto;
 import com.jiyun.recode.domain.analysis.service.FoodService;
 import com.jiyun.recode.domain.auth.service.AuthUser;
 import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,15 +23,17 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.jiyun.recode.global.constant.ResourceConstant.foodUri;
-import static com.jiyun.recode.global.constant.ResourceConstant.host;
+import static com.jiyun.recode.global.constant.ResourceConstant.musicUri;
 
 @Slf4j
 @RestController
 @RequestMapping("api/v1/posts/{postId}/recommends")
 @RequiredArgsConstructor
-public class FoodRecommendController {
+public class RecommendationController {
 	private final PostService postService;
 	private final FoodService foodService;
+	@Value("${server.host}")
+	public static String host;
 	@PostMapping("/foods")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<FoodListResDto> getFoodRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
@@ -39,7 +42,7 @@ public class FoodRecommendController {
 		if(moodNum == 8){
 			moodNum = 4;
 		}
-		FoodReqDto request = FoodReqDto.builder()
+		RecommendationReqDto request = RecommendationReqDto.builder()
 				.mood(moodNum)
 				.uuid(account.getAccountId())
 		.build();
@@ -50,6 +53,38 @@ public class FoodRecommendController {
 		RestTemplate restTemplate = new RestTemplate();
 		//여기서부터 다시
 		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(host+foodUri, HttpMethod.POST, entity, FoodListResDto.class);
+
+		FoodListResDto foodListResDto = responseEntity.getBody();
+		System.out.println(foodListResDto);
+
+		List<FoodListResDto.FoodResDto> foodList = foodListResDto.getFoodList();
+
+		foodService.uploadFood(post, foodList);
+
+		return ResponseEntity.ok().body(foodListResDto);
+	}
+
+	
+
+	@PostMapping("/musics")
+	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
+	public ResponseEntity<FoodListResDto> getMusicRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
+		Post post = postService.findById(postId);
+		Integer moodNum = post.getEmotion().getId();
+		if(moodNum == 8){
+			moodNum = 4;
+		}
+		RecommendationReqDto request = RecommendationReqDto.builder()
+				.mood(moodNum)
+				.uuid(account.getAccountId())
+				.build();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+		HttpEntity entity = new HttpEntity(request, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		//여기서부터 다시
+		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(host+musicUri, HttpMethod.POST, entity, FoodListResDto.class);
 
 		FoodListResDto foodListResDto = responseEntity.getBody();
 		System.out.println(foodListResDto);
