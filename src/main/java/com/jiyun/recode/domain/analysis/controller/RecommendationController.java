@@ -9,6 +9,7 @@ import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.jiyun.recode.global.constant.ResourceConstant.foodUri;
-import static com.jiyun.recode.global.constant.ResourceConstant.host;
+import static com.jiyun.recode.global.constant.ResourceConstant.musicUri;
 
 @Slf4j
 @RestController
@@ -31,6 +32,8 @@ import static com.jiyun.recode.global.constant.ResourceConstant.host;
 public class RecommendationController {
 	private final PostService postService;
 	private final FoodService foodService;
+	@Value("${server.host}")
+	public static String host;
 	@PostMapping("/foods")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<FoodListResDto> getFoodRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
@@ -61,6 +64,8 @@ public class RecommendationController {
 		return ResponseEntity.ok().body(foodListResDto);
 	}
 
+	
+
 	@PostMapping("/musics")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<FoodListResDto> getMusicRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
@@ -79,7 +84,7 @@ public class RecommendationController {
 
 		RestTemplate restTemplate = new RestTemplate();
 		//여기서부터 다시
-		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(host+foodUri, HttpMethod.POST, entity, FoodListResDto.class);
+		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(host+musicUri, HttpMethod.POST, entity, FoodListResDto.class);
 
 		FoodListResDto foodListResDto = responseEntity.getBody();
 		System.out.println(foodListResDto);
