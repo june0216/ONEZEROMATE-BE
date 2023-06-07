@@ -9,7 +9,6 @@ import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +21,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.UUID;
 
-import static com.jiyun.recode.global.constant.ResourceConstant.foodUri;
-import static com.jiyun.recode.global.constant.ResourceConstant.musicUri;
+import static com.jiyun.recode.global.constant.ResourceConstant.*;
 
 @Slf4j
 @RestController
@@ -32,8 +30,7 @@ import static com.jiyun.recode.global.constant.ResourceConstant.musicUri;
 public class RecommendationController {
 	private final PostService postService;
 	private final FoodService foodService;
-	@Value("${server.host}")
-	public static String host;
+
 	@PostMapping("/foods")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<FoodListResDto> getFoodRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
