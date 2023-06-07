@@ -52,7 +52,7 @@ public class AnalysisController {
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<EmotionResDto> responseEntity = restTemplate.exchange(host+emotionUri, HttpMethod.POST, entity, EmotionResDto.class);
+		ResponseEntity<EmotionResDto> responseEntity = restTemplate.exchange(getHost()+emotionUri, HttpMethod.POST, entity, EmotionResDto.class);
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -76,7 +76,8 @@ public class AnalysisController {
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<KeywordListResDto> responseEntity = restTemplate.exchange(host+keywordUri, HttpMethod.POST, entity, KeywordListResDto.class);
+
+		ResponseEntity<KeywordListResDto> responseEntity = restTemplate.exchange(getHost()+keywordUri, HttpMethod.POST, entity, KeywordListResDto.class);
 
 		ObjectMapper mapper = new ObjectMapper();
 		//KeywordListResDto keywordResDtoList = mapper.readValue(responseEntity.getBody(), KeywordListResDto.class);
@@ -99,7 +100,7 @@ public class AnalysisController {
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<byte[]> response = restTemplate.exchange(host+keywordImageUri, HttpMethod.POST, entity, byte[].class);
+		ResponseEntity<byte[]> response = restTemplate.exchange(getHost()+keywordImageUri, HttpMethod.POST, entity, byte[].class);
 
 		byte[] byteImage = response.getBody();
 		String contentType = response.getHeaders().getContentType().toString();

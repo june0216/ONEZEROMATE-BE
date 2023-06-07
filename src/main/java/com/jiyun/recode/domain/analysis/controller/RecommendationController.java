@@ -49,7 +49,8 @@ public class RecommendationController {
 
 		RestTemplate restTemplate = new RestTemplate();
 		//여기서부터 다시
-		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(host+foodUri, HttpMethod.POST, entity, FoodListResDto.class);
+		System.out.println(getHost()+foodUri);
+		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(getHost()+foodUri, HttpMethod.POST, entity, FoodListResDto.class);
 
 		FoodListResDto foodListResDto = responseEntity.getBody();
 		System.out.println(foodListResDto);
@@ -81,7 +82,7 @@ public class RecommendationController {
 
 		RestTemplate restTemplate = new RestTemplate();
 		//여기서부터 다시
-		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(host+musicUri, HttpMethod.POST, entity, FoodListResDto.class);
+		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(getHost()+musicUri, HttpMethod.POST, entity, FoodListResDto.class);
 
 		FoodListResDto foodListResDto = responseEntity.getBody();
 		System.out.println(foodListResDto);

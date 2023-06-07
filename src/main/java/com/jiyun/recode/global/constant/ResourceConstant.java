@@ -1,14 +1,20 @@
 package com.jiyun.recode.global.constant;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ResourceConstant {
+	private static String host;
+
 	@Value("${server.host}")
 	public void setHost(String host) {
-		this.host = host;
+		ResourceConstant.host = host;
 	}
 
-	public static String host;
+	public static String getHost() {
+		return ResourceConstant.host;
+	}
 	public static String foodUri = "/api/v1/foods/recommendation";
 	public static String foodUpdateUri = "/api/v1/foods/user-profile";
 	public static String musicUri = "/api/v1/musics/recommendation";
