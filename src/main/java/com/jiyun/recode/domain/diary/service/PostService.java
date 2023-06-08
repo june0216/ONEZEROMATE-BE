@@ -28,14 +28,14 @@ public class PostService {
 	private final PostRepository postRepository;
 	private final DiaryService diaryService;
 	private final QuestionRepository questionRepository;
+	private final QuestionService questionService;
 	private final AnswerRepository answerRepository;
 
-	public List<Question> findAllRandomList(){
-		return questionRepository.findAllRandomList();
-	}
 	public UUID createForm(PostReqDto.Create requestDto, Account writer)
 	{
-		List<Question> questionList = findAllRandomList();
+		List<Question> questionList = questionService.findAllRandomList();
+		questionList.add(questionService.findById(477L));
+		questionList.add(questionService.findById(1L));
 		Post post = requestDto.toEntity(writer);
 		log.info("Created Post entity: {}", post);
 
