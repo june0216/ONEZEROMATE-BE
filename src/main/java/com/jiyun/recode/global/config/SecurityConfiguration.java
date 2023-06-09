@@ -73,6 +73,9 @@ public class SecurityConfiguration {
 		configuration.addAllowedHeader("*");
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedOrigin("http://localhost:5500");
+		configuration.addAllowedOrigin("https://onezeromate.com");
+		configuration.addAllowedOrigin("https://d4g7qvphh15dk.cloudfront.net");
+
 		configuration.addAllowedOrigin("http://localhost:3000");
 		configuration.setAllowCredentials(true);
 		configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
