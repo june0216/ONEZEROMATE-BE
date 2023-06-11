@@ -2,6 +2,7 @@ package com.jiyun.recode.domain.diary.domain;
 
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.analysis.domain.FoodRecommendation;
+import com.jiyun.recode.domain.analysis.domain.MusicRecommendation;
 import com.jiyun.recode.global.time.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -123,6 +124,16 @@ public class Post extends BaseTimeEntity {
 
 		}
 		this.foodRecommendations.add(food);
+	}
+
+	public void setMusic(MusicRecommendation musicRecommendation)
+	{
+		if(this.musicRecommendations != null)
+		{
+			//this.diary.getPostList().remove(this);
+
+		}
+		this.musicRecommendations.add(musicRecommendation);
 	}
 
 

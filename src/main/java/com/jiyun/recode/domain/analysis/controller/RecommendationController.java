@@ -5,6 +5,7 @@ import com.jiyun.recode.domain.analysis.dto.FoodListResDto;
 import com.jiyun.recode.domain.analysis.dto.MusicListResDto;
 import com.jiyun.recode.domain.analysis.dto.RecommendationReqDto;
 import com.jiyun.recode.domain.analysis.service.FoodService;
+import com.jiyun.recode.domain.analysis.service.MusicService;
 import com.jiyun.recode.domain.auth.service.AuthUser;
 import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.service.PostService;
@@ -31,6 +32,7 @@ import static com.jiyun.recode.global.constant.ResourceConstant.*;
 public class RecommendationController {
 	private final PostService postService;
 	private final FoodService foodService;
+	private final MusicService musicService;
 
 	@PostMapping("/foods")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
@@ -87,9 +89,9 @@ public class RecommendationController {
 
 		MusicListResDto musicListResDto = responseEntity.getBody();
 
-		List<MusicListResDto.MusicResDto> foodList = musicListResDto.getMusic();
+		List<MusicListResDto.MusicResDto> musicList = musicListResDto.getMusic();
 
-		//TODO: foodService.uploadFood(post, foodList);
+		musicService.uploadMusic(post, musicList);
 		return ResponseEntity.ok().body(musicListResDto);
 	}
 
