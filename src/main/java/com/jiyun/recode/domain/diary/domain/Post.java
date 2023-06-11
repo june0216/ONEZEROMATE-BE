@@ -63,6 +63,11 @@ public class Post extends BaseTimeEntity {
 	@JoinColumn(name = "post_id")
 	private List<FoodRecommendation> foodRecommendations = new ArrayList<>();
 
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "post_id")
+	private List<MusicRecommendation> musicRecommendations = new ArrayList<>();
+
 	@Builder
 	public Post(LocalDate date, String content,Account writer, Integer year, Integer month) {
 		this.date = date;

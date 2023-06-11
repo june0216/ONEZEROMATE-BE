@@ -2,6 +2,7 @@ package com.jiyun.recode.domain.analysis.controller;
 
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.analysis.dto.FoodListResDto;
+import com.jiyun.recode.domain.analysis.dto.MusicListResDto;
 import com.jiyun.recode.domain.analysis.dto.RecommendationReqDto;
 import com.jiyun.recode.domain.analysis.service.FoodService;
 import com.jiyun.recode.domain.auth.service.AuthUser;
@@ -66,7 +67,7 @@ public class RecommendationController {
 
 	@PostMapping("/musics")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
-	public ResponseEntity<FoodListResDto> getMusicRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
+	public ResponseEntity<MusicListResDto> getMusicRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
 		Post post = postService.findById(postId);
 		Integer moodNum = post.getEmotion().getId();
 		if(moodNum == 8){
@@ -82,16 +83,14 @@ public class RecommendationController {
 
 		RestTemplate restTemplate = new RestTemplate();
 		//여기서부터 다시
-		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(getHost()+musicUri, HttpMethod.POST, entity, FoodListResDto.class);
+		ResponseEntity<MusicListResDto> responseEntity = restTemplate.exchange(getHost()+musicUri, HttpMethod.POST, entity, MusicListResDto.class);
 
-		FoodListResDto foodListResDto = responseEntity.getBody();
-		System.out.println(foodListResDto);
+		MusicListResDto musicListResDto = responseEntity.getBody();
 
-		List<FoodListResDto.FoodResDto> foodList = foodListResDto.getFoodList();
+		List<MusicListResDto.MusicResDto> foodList = musicListResDto.getMusic();
 
-		foodService.uploadFood(post, foodList);
-
-		return ResponseEntity.ok().body(foodListResDto);
+		//TODO: foodService.uploadFood(post, foodList);
+		return ResponseEntity.ok().body(musicListResDto);
 	}
 
 }
