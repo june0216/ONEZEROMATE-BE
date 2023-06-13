@@ -1,7 +1,9 @@
 package com.jiyun.recode.domain.analysis.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.analysis.dto.FoodListResDto;
+import com.jiyun.recode.domain.analysis.dto.FoodRecommendProfileUpdateReqDto;
 import com.jiyun.recode.domain.analysis.dto.MusicListResDto;
 import com.jiyun.recode.domain.analysis.dto.RecommendationReqDto;
 import com.jiyun.recode.domain.analysis.service.FoodService;
@@ -38,10 +40,22 @@ public class RecommendationController {
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<FoodListResDto> getFoodRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
 		Post post = postService.findById(postId);
+
 		Integer moodNum = post.getEmotion().getId();
 		if(moodNum == 8){
 			moodNum = 4;
 		}
+		FoodRecommendProfileUpdateReqDto updateReqDto = foodService.updateUserProfile(account, post, moodNum);
+		if(updateReqDto != null){
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+			HttpEntity entity = new HttpEntity(updateReqDto, headers);
+
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<JsonNode> response = restTemplate.exchange(getHost()+foodUpdateUri, HttpMethod.POST, entity, JsonNode.class);
+
+		}
+
 		RecommendationReqDto request = RecommendationReqDto.builder()
 				.mood(moodNum)
 				.uuid(account.getAccountId())
