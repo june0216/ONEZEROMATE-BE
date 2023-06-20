@@ -48,9 +48,11 @@ jobs:
   
 
         # GET GitHub IP (5)
-    - name: get GitHub IP 
-      id: ip
-      uses: haythem/public-ip@v1.3
+    - name: Get Public IP (cloudflare-ip)
+      id: cloudflare-ip
+      run: | 
+        ipv4=$(dig +short -4 txt ch whoami.cloudflare @1.0.0.1)
+        echo "ipv4=$ipv4" >> $GITHUB_OUTPUT
       
     # Configure AWS Credentials (6) - AWS 접근 권한 취득(IAM)
     - name: Configure AWS Credentials
