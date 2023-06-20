@@ -21,40 +21,28 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    ## create application-database.yaml
     - name: make application-database.yaml
       run: |
-        ## create application-database.yaml
         cd ./src/main/resources
-
-        # application-database.yaml 파일 생성
         touch ./application.yml
-
-        # GitHub-Actions 에서 설정한 값을 application-database.yaml 파일에 쓰기
         echo "${{ secrets.DATABASE }}" >> ./application.yml
       shell: bash
 
-    ## gradle build
     - name: Build with Gradle
       run: ./gradlew bootJar
 
-
-    ## 웹 이미지 빌드 및 도커허브에 push
     - name: web docker build and push
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker build -t ${{ secrets.DOCKER_REPO }}/onezeromate-web .
         docker push ${{ secrets.DOCKER_REPO }}/onezeromate-web
-  
 
-        # GET GitHub IP (5)
-    - name: Get Public IP
-      id: publicip
-      run: |
-          response=$(curl -s canhazip.com)
-          echo "ip='$response'" >> "$GITHUB_OUTPUT"
+    - name: Get Public IP (cloudflare-ip)
+      id: cloudflare-ip
+      run: | 
+        ipv4=$(dig +short -4 txt ch whoami.cloudflare @1.0.0.1)
+        echo "ipv4=$ipv4" >> $GITHUB_ENV
       
-    # Configure AWS Credentials (6) - AWS 접근 권한 취득(IAM)
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with: 
@@ -62,15 +50,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
     
-    # Add github ip to AWS (7)
     - name: Add GitHub IP to AWS
       run: |
-        aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ap-northeast-2
-  
+        aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ env.ipv4 }}/32
+
     - name: create remote directory
       uses: appleboy/ssh-action@master
       with:
@@ -78,6 +61,7 @@ jobs:
         username: ubuntu
         key: ${{ secrets.KEY }}
         script: mkdir -p /home/ubuntu/srv/ubuntu
+
     - name: Change remote directory permissions
       uses: appleboy/ssh-action@master
       with:
@@ -93,26 +77,4 @@ jobs:
       uses: burnett01/rsync-deployments@4.1
       with:
         switches: -avzr --delete
-        remote_path: /home/ubuntu/srv/ubuntu
-        remote_host: ${{ secrets.HOST }}
-        remote_user: ubuntu
-        remote_key: ${{ secrets.KEY }}
-  
-    ## docker compose up
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ubuntu
-        key: ${{ secrets.KEY }}
-        script: |
-          sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPO }}/onezeromate-web
-          sudo docker pull ${{ secrets.DOCKER_REPO }}/onezeromate
-          sudo docker-compose -f /home/ubuntu/srv/ubuntu/docker-compose.yml up -d
-          sudo docker-compose restart nginx
-          docker image prune -f
-        # REMOVE Github IP FROM security group (9)
-    - name: Remove IP FROM security group
-      run: |
-        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        remote_path: /home/ubuntu/s
