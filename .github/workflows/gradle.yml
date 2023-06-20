@@ -77,4 +77,30 @@ jobs:
       uses: burnett01/rsync-deployments@4.1
       with:
         switches: -avzr --delete
-        remote_path: /home/ubuntu/s
+        remote_path: /home/ubuntu/srv/ubuntu
+        remote_host: ${{ secrets.HOST }}  # 이 부분이 올바른 호스트명 또는 IP 주소인지 확인하세요
+        remote_user: ubuntu
+        remote_key: ${{ secrets.KEY }}  # 이 부분이 올바른 SSH 비공개 키(OpenSS
+        ## Docker Compose Up
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ubuntu
+        key: ${{ secrets.KEY }}
+        script: |
+          sudo docker rm -f $(docker ps -qa)
+          sudo docker pull ${{ secrets.DOCKER_REPO }}/onezeromate-web
+          sudo docker-compose -f /home/ubuntu/srv/ubuntu/docker-compose.yml up -d
+          sudo docker-compose restart nginx
+          docker image prune -f
+
+    ## Remove Github IP FROM security group
+    - name: Remove IP FROM security group
+      run: |
+        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ env.ipv4 }}/32
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-northeast-2
+
