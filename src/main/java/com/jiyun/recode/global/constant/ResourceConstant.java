@@ -21,8 +21,9 @@ public class ResourceConstant {
 
 	public static String musicUpdateUri = "/api/v1/musics/user-profile";
 
-	public static String emotionUri = "/api/emotion";
+	public static String emotionUri = "/api/v1/analysis/emotion";
 	public static String keywordUri = "/api/analysis/keywords";
 	public static String keywordImageUri = "/api/analysis/keywords/images";
+	public static String summaryUri = "/api/v1/summary";
 
 }

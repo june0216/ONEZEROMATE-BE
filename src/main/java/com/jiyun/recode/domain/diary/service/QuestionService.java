@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -15,8 +17,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionService {
 	private final QuestionRepository questionRepository;
+	private boolean hasDuplicates(List<Question> questions) {
+		Set<Long> uniqueIds = new HashSet<>();
+		for (Question question : questions) {
+			if (!uniqueIds.add(question.getQuestionId())) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public List<Question> findAllRandomList(){
-		return questionRepository.findAllRandomList();
+		List<Question> result;
+		while(true){
+			result = questionRepository.findAllRandomList();
+			if (hasDuplicates(result) == true){
+				break;
+			}
+		}
+		return result;
 	}
 
 	@Transactional(readOnly = true)

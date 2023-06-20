@@ -3,13 +3,12 @@ package com.jiyun.recode.domain.analysis.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.analysis.domain.WordImage;
-import com.jiyun.recode.domain.analysis.dto.AnalysisReqDto;
-import com.jiyun.recode.domain.analysis.dto.EmotionResDto;
-import com.jiyun.recode.domain.analysis.dto.KeywordListResDto;
-import com.jiyun.recode.domain.analysis.dto.WordImageResDto;
+import com.jiyun.recode.domain.analysis.dto.*;
 import com.jiyun.recode.domain.analysis.service.AnalysisService;
+import com.jiyun.recode.domain.analysis.service.FoodService;
 import com.jiyun.recode.domain.analysis.service.WordImageService;
 import com.jiyun.recode.domain.auth.service.AuthUser;
+import com.jiyun.recode.domain.diary.domain.Emotion;
 import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.service.PostService;
 import com.jiyun.recode.global.custom.CustomMultipartFile;
@@ -34,6 +33,7 @@ public class AnalysisController {
 
 	private final PostService postService;
 	private final AnalysisService analysisService;
+	private final FoodService foodService;
 
 	private String S3Bucket = "bucket"; // Bucket 이름
 
@@ -43,7 +43,7 @@ public class AnalysisController {
 
 	@GetMapping("/emotion")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
-	public ResponseEntity<EmotionResDto> getDiaryEmotion(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
+	public ResponseEntity<AnalysisResDto> getDiaryEmotion(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
 		Post post = postService.findById(postId);
 
 		AnalysisReqDto request = new AnalysisReqDto(post.getContent());
@@ -52,17 +52,28 @@ public class AnalysisController {
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<EmotionResDto> responseEntity = restTemplate.exchange(getHost()+emotionUri, HttpMethod.POST, entity, EmotionResDto.class);
+		ResponseEntity<AnalysisResDto> responseEntity = restTemplate.exchange(getHost()+emotionUri, HttpMethod.POST, entity, AnalysisResDto.class);
 
-		ObjectMapper mapper = new ObjectMapper();
+		AnalysisResDto response = responseEntity.getBody();
 
-		String jsonInString = mapper.writeValueAsString(responseEntity.getBody());
+		Emotion emotion = analysisService.uploadEmotion(post, response.getData());
+		Integer moodNum = emotion.getId();
+		if(moodNum == 8){
+			moodNum = 4;
+		}
+		FoodRecommendProfileUpdateReqDto updateReqDto = foodService.updateUserProfile(account, post, moodNum);
+		if(updateReqDto != null){
+			headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+			entity = new HttpEntity(updateReqDto, headers);
 
+			restTemplate = new RestTemplate();
+			restTemplate.exchange(getHost()+foodUpdateUri, HttpMethod.POST, entity, Void.class);
+		}
 
-		analysisService.uploadEmotion(post, jsonInString);
-
-		return ResponseEntity.ok().body(new EmotionResDto(jsonInString));
+		return ResponseEntity.ok().body(response);
 	}
+
 
 	@GetMapping ("/keywords")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
@@ -121,6 +132,31 @@ public class AnalysisController {
 
 
 	}
+
+	@GetMapping("/summary")
+	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
+	public ResponseEntity<AnalysisResDto> getDiarySummary(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
+		Post post = postService.findById(postId);
+
+		SummaryReqDto request = new SummaryReqDto(post.getContent());
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+		HttpEntity entity = new HttpEntity(request, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<AnalysisResDto> responseEntity = restTemplate.exchange(getHost()+summaryUri, HttpMethod.POST, entity, AnalysisResDto.class);
+
+		ObjectMapper mapper = new ObjectMapper();
+		AnalysisResDto response = responseEntity.getBody();
+
+		String jsonInString = mapper.writeValueAsString(response);
+
+
+		analysisService.uploadSummary(post, response.getData());
+
+		return ResponseEntity.ok().body(new AnalysisResDto(post.getSummary()));
+	}
+
 
 	@PostMapping("/uploads")
 	public ResponseEntity<Object> uploadFiles(@AuthUser Account account,

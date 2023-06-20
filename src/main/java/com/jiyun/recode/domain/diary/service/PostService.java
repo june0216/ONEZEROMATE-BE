@@ -34,8 +34,8 @@ public class PostService {
 	public UUID createForm(PostReqDto.Create requestDto, Account writer)
 	{
 		List<Question> questionList = questionService.findAllRandomList();
-		questionList.add(questionService.findById(477L));
 		questionList.add(questionService.findById(1L));
+		questionList.add(questionService.findById(2L));
 		Post post = requestDto.toEntity(writer);
 		log.info("Created Post entity: {}", post);
 

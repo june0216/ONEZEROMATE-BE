@@ -1,10 +1,9 @@
 package com.jiyun.recode.domain.analysis.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.analysis.dto.FoodListResDto;
-import com.jiyun.recode.domain.analysis.dto.FoodRecommendProfileUpdateReqDto;
 import com.jiyun.recode.domain.analysis.dto.MusicListResDto;
+import com.jiyun.recode.domain.analysis.dto.MusicRecommendProfileUpdateReqDto;
 import com.jiyun.recode.domain.analysis.dto.RecommendationReqDto;
 import com.jiyun.recode.domain.analysis.service.FoodService;
 import com.jiyun.recode.domain.analysis.service.MusicService;
@@ -45,16 +44,9 @@ public class RecommendationController {
 		if(moodNum == 8){
 			moodNum = 4;
 		}
-		FoodRecommendProfileUpdateReqDto updateReqDto = foodService.updateUserProfile(account, post, moodNum);
-		if(updateReqDto != null){
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-			HttpEntity entity = new HttpEntity(updateReqDto, headers);
+		System.out.println(account.getAccountId());
+		System.out.println(post.getAnswers().get(0).getContent());
 
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<JsonNode> response = restTemplate.exchange(getHost()+foodUpdateUri, HttpMethod.POST, entity, JsonNode.class);
-
-		}
 
 		RecommendationReqDto request = RecommendationReqDto.builder()
 				.mood(moodNum)
@@ -70,7 +62,6 @@ public class RecommendationController {
 		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(getHost()+foodUri, HttpMethod.POST, entity, FoodListResDto.class);
 
 		FoodListResDto foodListResDto = responseEntity.getBody();
-		System.out.println(foodListResDto);
 
 		List<FoodListResDto.FoodResDto> foodList = foodListResDto.getFoodList();
 
@@ -89,6 +80,15 @@ public class RecommendationController {
 		if(moodNum == 8){
 			moodNum = 4;
 		}
+		MusicRecommendProfileUpdateReqDto updateReqDto = musicService.updateUserProfile(account, post, moodNum);
+		if(updateReqDto != null){
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+			HttpEntity entity = new HttpEntity(updateReqDto, headers);
+
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.exchange(getHost()+musicUpdateUri, HttpMethod.POST, entity, Void.class);
+		}
 		RecommendationReqDto request = RecommendationReqDto.builder()
 				.mood(moodNum)
 				.uuid(account.getAccountId())
@@ -100,7 +100,6 @@ public class RecommendationController {
 		RestTemplate restTemplate = new RestTemplate();
 		//여기서부터 다시
 		ResponseEntity<MusicListResDto> responseEntity = restTemplate.exchange(getHost()+musicUri, HttpMethod.POST, entity, MusicListResDto.class);
-
 		MusicListResDto musicListResDto = responseEntity.getBody();
 
 		List<MusicListResDto.MusicResDto> musicList = musicListResDto.getMusic();

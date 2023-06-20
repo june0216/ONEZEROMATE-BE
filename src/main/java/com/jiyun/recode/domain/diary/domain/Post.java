@@ -45,6 +45,9 @@ public class Post extends BaseTimeEntity {
 	@Column(length = 10)
 	private Emotion emotion;
 
+	@Column
+	private String summary;
+
 
 
 
@@ -93,6 +96,10 @@ public class Post extends BaseTimeEntity {
 			// Handle this case as you see fit.
 		}
 		return emotion;
+	}
+
+	public void setSummary(String summary){
+		this.summary = summary;
 	}
 	public void updateContent(String content)
 	{
