@@ -1,7 +1,7 @@
 package com.jiyun.recode.domain.diary.api;
 
 import com.jiyun.recode.domain.account.domain.Account;
-import com.jiyun.recode.domain.analysis.dto.EmotionResDto;
+import com.jiyun.recode.domain.analysis.dto.AnalysisResDto;
 import com.jiyun.recode.domain.auth.service.AuthUser;
 import com.jiyun.recode.domain.diary.domain.Post;
 import com.jiyun.recode.domain.diary.dto.PostReqDto;
@@ -54,6 +54,7 @@ public class PostController {
 	public ResponseEntity<PostResDto> updatePost(@PathVariable final UUID postId, @AuthUser Account account, @RequestBody final PostReqDto.Update requestDto) {
 		UUID Id = postService.update(postId, requestDto);
 		Post post = postService.findById(Id);
+
 		return ResponseEntity.ok()
 				.body(new PostResDto(post));
 	}
@@ -69,20 +70,20 @@ public class PostController {
 
 	@GetMapping("{postId}/result/emotion")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
-	public ResponseEntity<EmotionResDto> readEmotion(@PathVariable final UUID postId, @AuthUser Account account) {
+	public ResponseEntity<AnalysisResDto> readEmotion(@PathVariable final UUID postId, @AuthUser Account account) {
 		Post post = postService.findById(postId);
 
 		return ResponseEntity.ok()
-				.body(new EmotionResDto(post.getEmotion().name()));
+				.body(new AnalysisResDto(post.getEmotion().name()));
 	}
 
 	@GetMapping("{postId}/result/keyword")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username ) or hasRole('ROLE_ADMIN'))")
-	public ResponseEntity<EmotionResDto> readKeyword(@PathVariable final UUID postId, @AuthUser Account account) {
+	public ResponseEntity<AnalysisResDto> readKeyword(@PathVariable final UUID postId, @AuthUser Account account) {
 		Post post = postService.findById(postId);
 
 		return ResponseEntity.ok()
-				.body(new EmotionResDto(post.getEmotion().name()));
+				.body(new AnalysisResDto(post.getEmotion().name()));
 	}
 
 

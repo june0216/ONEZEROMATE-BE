@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EmotionResDto {
-	private String emotion;
+public class AnalysisResDto {
+	private String data;
 
-	public EmotionResDto(String emotion) {
-		this.emotion = emotion;
+	public AnalysisResDto(String data) {
+		this.data = data;
 	}
 }

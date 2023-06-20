@@ -16,9 +16,14 @@ import javax.transaction.Transactional;
 public class AnalysisService {
 	private final PostService postService;
 
-	public void uploadEmotion(Post post, String emotion){
+	public Emotion uploadEmotion(Post post, String emotion){
 		Emotion emotionFromString = post.setEmotionFromString(emotion);
 		post.getDiary().incrementEmotion(emotionFromString);
+		return emotionFromString;
+	}
+
+	public void uploadSummary(Post post, String summary){
+		post.setSummary(summary);
 	}
 
 }
