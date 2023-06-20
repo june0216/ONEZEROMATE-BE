@@ -28,12 +28,7 @@ public class QuestionService {
 	}
 	public List<Question> findAllRandomList(){
 		List<Question> result;
-		while(true){
-			result = questionRepository.findAllRandomList();
-			if (hasDuplicates(result) == true){
-				break;
-			}
-		}
+		result = questionRepository.findAllRandomList();
 		return result;
 	}
 
