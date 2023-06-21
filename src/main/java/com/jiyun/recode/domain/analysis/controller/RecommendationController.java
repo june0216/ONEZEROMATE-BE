@@ -41,8 +41,7 @@ public class RecommendationController {
 		if(moodNum == 8){
 			moodNum = 4;
 		}
-		System.out.println(account.getAccountId());
-		System.out.println(post.getAnswers().get(0).getContent());
+
 
 
 		RecommendationReqDto request = RecommendationReqDto.builder()
@@ -50,16 +49,19 @@ public class RecommendationController {
 				.uuid(account.getAccountId())
 		.build();
 		HttpHeaders headers = new HttpHeaders();
+
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
 		System.out.println(getHost()+foodUri);
+
 		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(getHost()+foodUri, HttpMethod.POST, entity, FoodListResDto.class);
 
 		FoodListResDto foodListResDto = responseEntity.getBody();
 
 		List<FoodListResDto.FoodResDto> foodList = foodListResDto.getFoodList();
+
 
 		foodService.uploadFood(post, foodList);
 
