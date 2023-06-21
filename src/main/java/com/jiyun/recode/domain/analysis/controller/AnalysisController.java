@@ -45,31 +45,34 @@ public class AnalysisController {
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<AnalysisResDto> getDiaryEmotion(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
 		Post post = postService.findById(postId);
-
-		AnalysisReqDto request = new AnalysisReqDto(post.getContent());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-		HttpEntity entity = new HttpEntity(request, headers);
-
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<AnalysisResDto> responseEntity = restTemplate.exchange(getHost()+emotionUri, HttpMethod.POST, entity, AnalysisResDto.class);
-
-		AnalysisResDto response = responseEntity.getBody();
-
-		Emotion emotion = analysisService.uploadEmotion(post, response.getData());
-		Integer moodNum = emotion.getId();
-		if(moodNum == 8){
-			moodNum = 4;
-		}
-		FoodRecommendProfileUpdateReqDto updateReqDto = foodService.updateUserProfile(account, post, moodNum);
-		if(updateReqDto != null){
-			headers = new HttpHeaders();
+		if(post.getEmotion() != null){
+			AnalysisReqDto request = new AnalysisReqDto(post.getContent());
+			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-			entity = new HttpEntity(updateReqDto, headers);
+			HttpEntity entity = new HttpEntity(request, headers);
 
-			restTemplate = new RestTemplate();
-			restTemplate.exchange(getHost()+foodUpdateUri, HttpMethod.POST, entity, Void.class);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<AnalysisResDto> responseEntity = restTemplate.exchange(getHost()+emotionUri, HttpMethod.POST, entity, AnalysisResDto.class);
+
+			AnalysisResDto response = responseEntity.getBody();
+
+			Emotion emotion = analysisService.uploadEmotion(post, response.getData());
+			Integer moodNum = emotion.getId();
+			if(moodNum == 8){
+				moodNum = 4;
+			}
+			FoodRecommendProfileUpdateReqDto updateReqDto = foodService.updateUserProfile(account, post, moodNum);
+			if(updateReqDto != null){
+				headers = new HttpHeaders();
+				headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+				entity = new HttpEntity(updateReqDto, headers);
+
+				restTemplate = new RestTemplate();
+				restTemplate.exchange(getHost()+foodUpdateUri, HttpMethod.POST, entity, Void.class);
+			}
+			return ResponseEntity.ok().body(response);
 		}
+		AnalysisResDto response = new AnalysisResDto(post.getEmotion().getTitle());
 
 		return ResponseEntity.ok().body(response);
 	}
@@ -80,7 +83,7 @@ public class AnalysisController {
 	public ResponseEntity<KeywordListResDto> getDiaryKeywords(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
 		Post post = postService.findById(postId);
 		String content = postService.collectContent(post);
-		System.out.println(content);
+
 		AnalysisReqDto request = new AnalysisReqDto(content);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -137,23 +140,24 @@ public class AnalysisController {
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<AnalysisResDto> getDiarySummary(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
 		Post post = postService.findById(postId);
+		if(post.getSummary() != null){
+			SummaryReqDto request = new SummaryReqDto(post.getContent());
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+			HttpEntity entity = new HttpEntity(request, headers);
 
-		SummaryReqDto request = new SummaryReqDto(post.getContent());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-		HttpEntity entity = new HttpEntity(request, headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<AnalysisResDto> responseEntity = restTemplate.exchange(getHost()+summaryUri, HttpMethod.POST, entity, AnalysisResDto.class);
 
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<AnalysisResDto> responseEntity = restTemplate.exchange(getHost()+summaryUri, HttpMethod.POST, entity, AnalysisResDto.class);
+			ObjectMapper mapper = new ObjectMapper();
+			AnalysisResDto response = responseEntity.getBody();
 
-		ObjectMapper mapper = new ObjectMapper();
-		AnalysisResDto response = responseEntity.getBody();
-
-		String jsonInString = mapper.writeValueAsString(response);
+			String jsonInString = mapper.writeValueAsString(response);
 
 
-		analysisService.uploadSummary(post, response.getData());
-
+			analysisService.uploadSummary(post, response.getData());
+			
+		}
 		return ResponseEntity.ok().body(new AnalysisResDto(post.getSummary()));
 	}
 

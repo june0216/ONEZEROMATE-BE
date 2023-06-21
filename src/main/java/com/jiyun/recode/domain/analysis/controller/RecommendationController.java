@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -35,7 +32,7 @@ public class RecommendationController {
 	private final FoodService foodService;
 	private final MusicService musicService;
 
-	@PostMapping("/foods")
+	@GetMapping("/foods")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<FoodListResDto> getFoodRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
 		Post post = postService.findById(postId);
@@ -57,7 +54,6 @@ public class RecommendationController {
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		//여기서부터 다시
 		System.out.println(getHost()+foodUri);
 		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(getHost()+foodUri, HttpMethod.POST, entity, FoodListResDto.class);
 
@@ -72,7 +68,7 @@ public class RecommendationController {
 
 	
 
-	@PostMapping("/musics")
+	@GetMapping("/musics")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<MusicListResDto> getMusicRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
 		Post post = postService.findById(postId);
