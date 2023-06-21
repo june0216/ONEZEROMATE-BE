@@ -1,7 +1,9 @@
 package com.jiyun.recode.domain.auth.api;
 
+import com.jiyun.recode.domain.account.domain.Account;
 import com.jiyun.recode.domain.auth.dto.*;
 import com.jiyun.recode.domain.auth.service.AuthService;
+import com.jiyun.recode.domain.auth.service.AuthUser;
 import com.jiyun.recode.domain.auth.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +53,14 @@ public class AuthController {
 		return ResponseEntity.ok()
 				.header(SET_COOKIE, responseCookie.toString())
 				.body(new LoginResDto(res.getNickname(), res.getAccessToken()));
+	}
+
+	@GetMapping("/logout")
+	public ResponseEntity<String> logout(@AuthUser Account account, HttpServletRequest request) {
+		String accessToken = request.getHeader("Authorization").substring(7);
+		authService.signOut(accessToken);
+		return new ResponseEntity<>("LOGOUT_SUCCESS", HttpStatus.OK);
+
 	}
 
 	@PostMapping("/tokens/refresh")

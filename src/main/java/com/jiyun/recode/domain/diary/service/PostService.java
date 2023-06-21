@@ -128,9 +128,6 @@ public class PostService {
 
 	public String collectContent(Post post){
 		String result = post.getContent();
-		for(Answer answer : post.getAnswers()){
-			result += answer.getContent() + " ";
-		}
 		return result;
 	}
 	@Transactional(readOnly = true)

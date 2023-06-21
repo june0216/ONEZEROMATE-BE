@@ -42,6 +42,12 @@ public class MusicService {
 				break;
 			}
 		}
+		if (musicContent.contains("-")) {
+			String[] parts = musicContent.split("-");
+
+		} else {
+			musicContent = "Hype Boy-NewJeans";
+		}
 
 		String[] parts = musicContent.split("-");
 

@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -35,7 +32,7 @@ public class RecommendationController {
 	private final FoodService foodService;
 	private final MusicService musicService;
 
-	@PostMapping("/foods")
+	@GetMapping("/foods")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<FoodListResDto> getFoodRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
 		Post post = postService.findById(postId);
@@ -44,8 +41,7 @@ public class RecommendationController {
 		if(moodNum == 8){
 			moodNum = 4;
 		}
-		System.out.println(account.getAccountId());
-		System.out.println(post.getAnswers().get(0).getContent());
+
 
 
 		RecommendationReqDto request = RecommendationReqDto.builder()
@@ -53,17 +49,19 @@ public class RecommendationController {
 				.uuid(account.getAccountId())
 		.build();
 		HttpHeaders headers = new HttpHeaders();
+
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 		HttpEntity entity = new HttpEntity(request, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		//여기서부터 다시
 		System.out.println(getHost()+foodUri);
+
 		ResponseEntity<FoodListResDto> responseEntity = restTemplate.exchange(getHost()+foodUri, HttpMethod.POST, entity, FoodListResDto.class);
 
 		FoodListResDto foodListResDto = responseEntity.getBody();
 
 		List<FoodListResDto.FoodResDto> foodList = foodListResDto.getFoodList();
+
 
 		foodService.uploadFood(post, foodList);
 
@@ -72,7 +70,7 @@ public class RecommendationController {
 
 	
 
-	@PostMapping("/musics")
+	@GetMapping("/musics")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<MusicListResDto> getMusicRecommendation(@PathVariable final UUID postId, @AuthUser Account account) throws Exception {
 		Post post = postService.findById(postId);
