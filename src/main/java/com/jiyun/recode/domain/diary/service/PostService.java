@@ -130,6 +130,17 @@ public class PostService {
 		String result = post.getContent();
 		return result;
 	}
+
+	public String collectDiaryContent(List<Post> posts){
+		String result = " ";
+		for(Post post : posts){
+			if(post.getContent() != null){
+				result = result + " "+post.getContent();
+			}
+
+		}
+		return result;
+	}
 	@Transactional(readOnly = true)
 	public Post findById(UUID postId){
 		return postRepository.findById(postId)
