@@ -140,16 +140,20 @@ public class AnalysisController {
 	@GetMapping("/summary")
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<AnalysisResDto> getDiarySummary(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
+		System.out.println("안녕");
 		Post post = postService.findById(postId);
-		if(post.getSummary() != null){
+		System.out.println("이녀석");
+		if(post.getSummary() == null){
 			SummaryReqDto request = new SummaryReqDto(post.getContent());
 			HttpHeaders headers = new HttpHeaders();
+			System.out.println("안녕");
 			headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+			System.out.println("안녕");
 			HttpEntity entity = new HttpEntity(request, headers);
 
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<AnalysisResDto> responseEntity = restTemplate.exchange(getHost()+summaryUri, HttpMethod.POST, entity, AnalysisResDto.class);
-
+			System.out.println("안녕");
 			ObjectMapper mapper = new ObjectMapper();
 			AnalysisResDto response = responseEntity.getBody();
 
