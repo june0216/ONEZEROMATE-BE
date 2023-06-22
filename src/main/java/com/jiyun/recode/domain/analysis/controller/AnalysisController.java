@@ -45,7 +45,7 @@ public class AnalysisController {
 	@PreAuthorize("isAuthenticated() and (( @postService.findById(#postId).getWriter().getEmail() == principal.username )or hasRole('ROLE_ADMIN'))")
 	public ResponseEntity<AnalysisResDto> getDiaryEmotion(@PathVariable final UUID postId, @AuthUser Account account) throws Exception{
 		Post post = postService.findById(postId);
-		if(post.getEmotion() != null){
+		//if(post.getEmotion().getId() == 8){
 			AnalysisReqDto request = new AnalysisReqDto(post.getContent());
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -61,6 +61,7 @@ public class AnalysisController {
 			if(moodNum == 8){
 				moodNum = 4;
 			}
+			System.out.println(moodNum);
 			FoodRecommendProfileUpdateReqDto updateReqDto = foodService.updateUserProfile(account, post, moodNum);
 			if(updateReqDto != null){
 				headers = new HttpHeaders();
@@ -71,10 +72,10 @@ public class AnalysisController {
 				restTemplate.exchange(getHost()+foodUpdateUri, HttpMethod.POST, entity, Void.class);
 			}
 			return ResponseEntity.ok().body(response);
-		}
-		AnalysisResDto response = new AnalysisResDto(post.getEmotion().getTitle());
+		//}
+		//AnalysisResDto response = new AnalysisResDto(post.getEmotion().getTitle());
 
-		return ResponseEntity.ok().body(response);
+		//return ResponseEntity.ok().body(response);
 	}
 
 
