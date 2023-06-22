@@ -19,6 +19,7 @@ public class AnalysisService {
 	public Emotion uploadEmotion(Post post, String emotion){
 		Emotion emotionFromString = post.setEmotionFromString(emotion);
 		post.getDiary().incrementEmotion(emotionFromString);
+		System.out.println(post.getEmotion().getDescription());
 		return emotionFromString;
 	}
 

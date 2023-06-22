@@ -19,6 +19,6 @@ public class FoodRecommendProfileUpdateReqDto {
 	public FoodRecommendProfileUpdateReqDto(UUID uuid, String foodName, Integer mood) {
 		this.uuid = uuid;
 		this.foodName = foodName;
-		this.moodId = moodId;
+		this.moodId = mood;
 	}
 }
