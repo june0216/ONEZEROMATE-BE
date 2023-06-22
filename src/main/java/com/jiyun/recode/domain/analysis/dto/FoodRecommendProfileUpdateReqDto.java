@@ -13,12 +13,12 @@ public class FoodRecommendProfileUpdateReqDto {
 	private UUID uuid;
 
 	private String foodName;
-	private Integer mood;
+	private Integer moodId;
 
 	@Builder
 	public FoodRecommendProfileUpdateReqDto(UUID uuid, String foodName, Integer mood) {
 		this.uuid = uuid;
 		this.foodName = foodName;
-		this.mood = mood;
+		this.moodId = moodId;
 	}
 }
