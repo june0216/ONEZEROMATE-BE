@@ -22,7 +22,7 @@
 
 ## 👨‍👨‍👧‍👦 사용자 요청 흐름도 
 
-![](https://github.com/june0216/ONEZEROMATE-BE/issues/1#issue-1780566343)
+![](https://user-images.githubusercontent.com/76603301/249749806-17d77873-def9-4ea9-ab70-b5499ac0c431.png)
 
 ## 🛠 Tech Stacks
 
